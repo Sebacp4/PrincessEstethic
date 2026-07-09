@@ -144,6 +144,35 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--fuchsia);outline-of
 .acc-body.open{max-height:1200px;}
 .acc-icon{transition:transform 0.4s ease;}
 .acc-trigger.open .acc-icon{transform:rotate(180deg);}
+/* Page transition: scale content only, not Unicorn background */
+#main-nav,
+main,
+footer,
+body > .md\:hidden.fixed.bottom-0 {
+opacity: 0;
+transform: scale(0.985);
+transition: opacity 420ms ease-in-out, transform 420ms ease-in-out;
+transform-origin: center top;
+will-change: opacity, transform;
+}
+body.page-ready #main-nav,
+body.page-ready main,
+body.page-ready footer,
+body.page-ready > .md\:hidden.fixed.bottom-0 {
+opacity: 1;
+transform: scale(1);
+}
+body.page-exit #main-nav,
+body.page-exit main,
+body.page-exit footer,
+body.page-exit > .md\:hidden.fixed.bottom-0 {
+opacity: 0;
+transform: scale(0.975);
+}
+/* Keep Unicorn Studio background untouched */
+.aura-background-component {
+transform: none !important;
+}
 @media (prefers-reduced-motion:reduce){
 *{animation:none!important;transition:none!important;scroll-behavior:auto!important;}
 .reveal{opacity:1;transform:none;}
@@ -1501,6 +1530,90 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--fuchsia);outline-of
       /* ===== Init ===== */
       bindAccordions();
       applyLang(currentLang);
+    </script>
+    <script>
+      (function () {
+        var TRANSITION_TIME = 420;
+    
+        function isModifiedClick(event) {
+          return event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0;
+        }
+    
+        function closeMobileMenuIfOpen() {
+          var menu = document.getElementById('mobile-menu');
+          var toggle = document.getElementById('menu-toggle');
+          var icon = document.getElementById('menu-icon');
+    
+          if (menu && menu.classList.contains('open')) {
+            menu.classList.remove('open');
+          }
+    
+          if (toggle) {
+            toggle.setAttribute('aria-expanded', 'false');
+          }
+    
+          if (icon && icon.setAttribute) {
+            icon.setAttribute('icon', 'solar:hamburger-menu-linear');
+          }
+    
+          document.body.style.overflow = '';
+        }
+    
+        window.addEventListener('DOMContentLoaded', function () {
+          requestAnimationFrame(function () {
+            document.body.classList.add('page-ready');
+          });
+        });
+    
+        document.addEventListener('click', function (event) {
+          var link = event.target.closest('a[href]');
+          if (!link || isModifiedClick(event)) return;
+    
+          var href = link.getAttribute('href');
+          if (!href) return;
+    
+          if (
+            href.startsWith('#') ||
+            href.startsWith('tel:') ||
+            href.startsWith('mailto:') ||
+            href.startsWith('sms:') ||
+            href.startsWith('https://wa.me') ||
+            href.startsWith('http://wa.me') ||
+            href.includes('google.com/maps')
+          ) {
+            return;
+          }
+    
+          if (link.target && link.target !== '_self') return;
+    
+          var url = new URL(link.href, window.location.href);
+          if (url.origin !== window.location.origin) return;
+    
+          var isSamePageHash =
+            url.pathname === window.location.pathname &&
+            url.hash &&
+            url.hash !== window.location.hash;
+    
+          if (isSamePageHash) return;
+    
+          event.preventDefault();
+          event.stopImmediatePropagation();
+    
+          closeMobileMenuIfOpen();
+    
+          document.body.classList.remove('page-ready');
+          document.body.classList.add('page-exit');
+    
+          setTimeout(function () {
+            window.location.href = url.href;
+          }, TRANSITION_TIME);
+        }, true);
+    
+        window.addEventListener('pageshow', function () {
+          document.body.classList.remove('page-exit');
+          document.body.classList.add('page-ready');
+        });
+      })();
     </script>
   
 </body></html>
