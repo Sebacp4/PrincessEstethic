@@ -1,0 +1,1506 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth"><head><script id="aura-preview-performance-controller">
+(function() {
+if (window.__auraPreviewPerformanceController) return;
+const nativeRequestAnimationFrame = window.requestAnimationFrame
+? window.requestAnimationFrame.bind(window)
+: function(callback) { return window.setTimeout(function() { callback(Date.now()); }, 16); };
+const nativeCancelAnimationFrame = window.cancelAnimationFrame
+? window.cancelAnimationFrame.bind(window)
+: window.clearTimeout.bind(window);
+const nativeSetInterval = window.setInterval.bind(window);
+let paused = false;
+let nextFrameId = 1;
+const frameRecords = new Map();
+const pausedFrameCallbacks = new Map();
+const style = document.createElement('style');
+style.id = 'aura-preview-performance-style';
+style.textContent = [
+'html[data-aura-preview-paused="true"] *,',
+'html[data-aura-preview-paused="true"] *::before,',
+'html[data-aura-preview-paused="true"] *::after {',
+'  animation-play-state: paused !important;',
+'  transition-duration: 0s !important;',
+'  scroll-behavior: auto !important;',
+'}'
+].join('\n');
+document.head.appendChild(style);
+window.requestAnimationFrame = function(callback) {
+const frameId = nextFrameId++;
+if (paused) {
+pausedFrameCallbacks.set(frameId, callback);
+frameRecords.set(frameId, { paused: true });
+return frameId;
+}
+const nativeFrameId = nativeRequestAnimationFrame(function(timestamp) {
+frameRecords.delete(frameId);
+callback(timestamp);
+});
+frameRecords.set(frameId, { nativeFrameId: nativeFrameId });
+return frameId;
+};
+window.cancelAnimationFrame = function(frameId) {
+const record = frameRecords.get(frameId);
+pausedFrameCallbacks.delete(frameId);
+if (record && typeof record.nativeFrameId !== 'undefined') {
+nativeCancelAnimationFrame(record.nativeFrameId);
+}
+frameRecords.delete(frameId);
+};
+window.setInterval = function(callback, delay) {
+const args = Array.prototype.slice.call(arguments, 2);
+return nativeSetInterval(function() {
+if (paused) return;
+callback.apply(this, args);
+}, delay);
+};
+const flushPausedFrames = function() {
+const callbacks = Array.from(pausedFrameCallbacks.entries());
+pausedFrameCallbacks.clear();
+callbacks.forEach(function(entry) {
+const frameId = entry[0];
+const callback = entry[1];
+const nativeFrameId = nativeRequestAnimationFrame(function(timestamp) {
+frameRecords.delete(frameId);
+callback(timestamp);
+});
+frameRecords.set(frameId, { nativeFrameId: nativeFrameId });
+});
+};
+const setPaused = function(nextPaused) {
+const shouldPause = Boolean(nextPaused);
+if (paused === shouldPause) return;
+paused = shouldPause;
+document.documentElement.toggleAttribute('data-aura-preview-paused', paused);
+if (!paused) {
+flushPausedFrames();
+}
+};
+window.__auraPreviewPerformanceController = {
+setPaused: setPaused,
+get paused() {
+return paused;
+}
+};
+window.addEventListener('message', function(event) {
+if (event.source !== window.parent) return;
+if (!event.data || event.data.type !== 'aura-preview-performance-mode') return;
+setPaused(event.data.paused);
+});
+})();
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Servicios | Princess Esthetics — Canóvanas, Puerto Rico</title>
+<meta name="description" content="Explora los servicios de Princess Esthetics: faciales, tecnología avanzada, tratamientos corporales, láser diodo y depilación con cera en Canóvanas, PR.">
+<link rel="canonical" href="https://princessesthetics.com/servicio">
+<meta name="theme-color" content="#0D1530">
+<link rel="icon" href="/favicon.ico">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&amp;family=Montserrat:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+<script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+<style>
+:root{
+--bg:#FCFBFA;--white:#FFFFFF;--cream:#FFF8F2;--navy:#0D1530;--charcoal:#25252D;
+--fuchsia:#F50087;--blush:#FFF2F4;--soft-pink:#F8B8CC;--pink-border:#FFD6E3;--gold:#F5CE68;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background-color:var(--bg);color:var(--charcoal);font-family:'Montserrat',sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden;padding-bottom:env(safe-area-inset-bottom);}
+.font-display{font-family:'Cormorant Garamond',serif;}
+.hero-title{font-size:clamp(2.8rem,6vw,5.4rem);line-height:0.98;}
+.section-title{font-size:clamp(2.3rem,4.5vw,4rem);line-height:1;}
+.liquid-glass{background:rgba(255,255,255,0.72);backdrop-filter:blur(20px) saturate(1.3);-webkit-backdrop-filter:blur(20px) saturate(1.3);border:1px solid rgba(13,21,48,0.08);box-shadow:0 18px 50px rgba(13,21,48,0.08);}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:5;opacity:0.015;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+.hide-scrollbar::-webkit-scrollbar{display:none;}.hide-scrollbar{-ms-overflow-style:none;scrollbar-width:none;}
+.reveal{opacity:0;transform:translateY(28px);transition:opacity 0.9s cubic-bezier(0.16,1,0.3,1),transform 0.9s cubic-bezier(0.16,1,0.3,1);}
+.reveal.visible{opacity:1;transform:translateY(0);}
+.d100{transition-delay:0.1s;}.d200{transition-delay:0.2s;}.d300{transition-delay:0.3s;}.d400{transition-delay:0.4s;}.d500{transition-delay:0.5s;}
+.nav-link{position:relative;}
+.nav-link::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:1.5px;background:var(--fuchsia);transition:width 0.3s ease;}
+.nav-link:hover::after,.nav-link.active::after{width:100%;}
+.nav-link.active{color:var(--fuchsia);}
+.btn-primary{display:inline-flex;align-items:center;justify-content:center;gap:0.5rem;background:var(--fuchsia);color:#fff;padding:0.9rem 2rem;border-radius:9999px;font-weight:500;font-size:0.85rem;letter-spacing:0.03em;transition:all 0.4s cubic-bezier(0.25,1,0.5,1);min-height:44px;text-decoration:none;border:none;cursor:pointer;}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 14px 34px -8px rgba(245,0,135,0.45);}
+.btn-ghost{display:inline-flex;align-items:center;justify-content:center;gap:0.5rem;background:rgba(255,255,255,0.6);color:var(--navy);padding:0.9rem 2rem;border-radius:9999px;font-weight:500;font-size:0.85rem;border:1px solid rgba(13,21,48,0.12);transition:all 0.4s ease;min-height:44px;text-decoration:none;cursor:pointer;}
+.btn-ghost:hover{background:var(--navy);color:#fff;border-color:var(--navy);transform:translateY(-2px);}
+.gold-line{height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);}
+.card-hover{transition:transform 0.45s cubic-bezier(0.25,1,0.5,1),box-shadow 0.45s ease;}
+.card-hover:hover{transform:translateY(-5px);box-shadow:0 24px 60px -12px rgba(13,21,48,0.14);}
+#mobile-menu{max-height:0;opacity:0;overflow:hidden;transition:max-height 0.5s cubic-bezier(0.16,1,0.3,1),opacity 0.4s ease;}
+#mobile-menu.open{max-height:520px;opacity:1;}
+.lang-btn{position:relative;padding-bottom:3px;}
+.lang-btn.active::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--fuchsia);border-radius:2px;}
+a:focus-visible,button:focus-visible{outline:2px solid var(--fuchsia);outline-offset:2px;border-radius:4px;}
+.cv-auto{content-visibility:auto;contain-intrinsic-size:1px 800px;}
+/* Category pill */
+.cat-pill{display:inline-flex;align-items:center;gap:0.4rem;white-space:nowrap;padding:0.65rem 1.25rem;border-radius:9999px;font-size:0.8rem;font-weight:500;border:1px solid rgba(13,21,48,0.1);background:rgba(255,255,255,0.7);color:var(--navy);transition:all 0.3s ease;}
+.cat-pill:hover{border-color:var(--fuchsia);color:var(--fuchsia);}
+.cat-pill.active{background:var(--navy);color:#fff;border-color:var(--navy);}
+/* Accordion */
+.acc-body{max-height:0;overflow:hidden;transition:max-height 0.5s cubic-bezier(0.16,1,0.3,1);}
+.acc-body.open{max-height:1200px;}
+.acc-icon{transition:transform 0.4s ease;}
+.acc-trigger.open .acc-icon{transform:rotate(180deg);}
+@media (prefers-reduced-motion:reduce){
+*{animation:none!important;transition:none!important;scroll-behavior:auto!important;}
+.reveal{opacity:1;transform:none;}
+}
+@media (max-width:767px){.mobile-bar-pad{padding-bottom:84px;}}
+</style>
+<script type="application/ld+json">
+{
+"@context":"https://schema.org",
+"@type":"BeautySalon",
+"name":"Princess Esthetics",
+"telephone":"+1-787-674-8261",
+"email":"princessestetics@yahoo.com",
+"address":{"@type":"PostalAddress","streetAddress":"Edificio Multiusos, segundo piso, oficina PB, 02 Cll Pepita Albandoz","addressLocality":"Canóvanas","addressRegion":"PR","postalCode":"00729","addressCountry":"PR"},
+"url":"https://princessesthetics.com/servicio"
+}
+</script></head>
+
+  <body class="mobile-bar-pad selection:bg-[#F50087] selection:text-white">
+    <!-- Background (component) added by Aura -->
+    <div class="aura-background-component fixed top-0 w-full h-screen -z-10" data-alpha-mask="97" style="; mask-image: linear-gradient(to bottom, transparent, black 0%, black 97%, transparent); -webkit-mask-image: linear-gradient(to bottom, transparent, black 0%, black 97%, transparent)">
+      <div class="aura-background-component top-0 w-full -z-10 absolute h-full">
+        <div data-us-project="ty3N7ZPaIU7KlWixQFIc" class="absolute w-full h-full left-0 top-0 -z-10" style="filter: sepia(1) hue-rotate(295deg) saturate(1.1) brightness(1.15);"></div>
+        <div class="absolute inset-0 w-full h-full pointer-events-none mix-blend-overlay z-10" style="background: linear-gradient(135deg, #FFF8F2 10%, #FFF2F4 40%, #F8B8CC 80%, rgba(245,0,135,0.4) 100%); opacity: 0.85;"></div>
+        <script type="text/javascript">
+          !function(){if(!window.UnicornStudio){window.UnicornStudio={isInitialized:!1};var i=document.createElement("script");i.src="https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v1.4.29/dist/unicornStudio.umd.js",i.onload=function(){window.UnicornStudio.isInitialized||(UnicornStudio.init(),window.UnicornStudio.isInitialized=!0)},(document.head || document.body).appendChild(i)}}();
+        </script>
+      </div>
+    </div>
+    <!-- ════════ NAVIGATION ════════ -->
+    <nav id="main-nav" class="fixed top-3 left-3 right-3 md:top-6 md:left-1/2 md:-translate-x-1/2 md:right-auto md:w-[95%] md:max-w-[1240px] z-50 liquid-glass rounded-3xl md:rounded-full transition-all duration-500" aria-label="Navegación principal" style="background: rgba(255, 255, 255, 0.9); box-shadow: rgba(13, 21, 48, 0.12) 0px 10px 40px;">
+      <div class="flex items-center justify-between px-4 md:px-6 h-20 md:h-24">
+        <a href="index.html" class="flex items-center gap-2 shrink-0" aria-label="Princess Esthetics inicio">
+          <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/096923e3-18d0-458b-b81b-5b1471885ec7_800w.png" alt="Princess Esthetics" class="md:h-20 md:scale-125 origin-left w-auto h-16 object-contain translate-x-8 scale-[1.7]" style="object-fit:contain" width="160" height="48" onclick="window.location.href='index.html'" role="button">
+        </a>
+        <div class="hidden lg:flex items-center gap-8 text-sm font-medium text-[#25252D]">
+          <a href="index.html" class="nav-link" data-es="Inicio" data-en="Home">Inicio</a>
+          <a href="index.html#nosotros" class="nav-link" data-es="Nosotros" data-en="About">Nosotros</a>
+          <a href="/servicio" class="nav-link active" data-es="Servicios" data-en="Services">Servicios</a>
+          <a href="galeria.html" class="nav-link" data-es="Galería" data-en="Gallery">Galería</a>
+          <a href="index.html#testimonios" class="nav-link" data-es="Testimonios" data-en="Testimonials">Testimonios</a>
+          <a href="index.html#ubicacion" class="nav-link" data-es="Ubicación" data-en="Location">Ubicación</a>
+        </div>
+        <div class="flex items-center gap-3 md:gap-4">
+          <div class="flex items-center gap-1 text-sm font-semibold text-[#25252D]" role="group" aria-label="Selector de idioma">
+            <button class="lang-btn active" data-lang="es" aria-label="Cambiar a español">
+              ES
+            </button>
+            <span class="text-[#0D1530]/30">|</span>
+            <button class="lang-btn" data-lang="en" aria-label="Switch to English">
+              EN
+            </button>
+          </div>
+          <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20recibir%20informaci%C3%B3n%20sobre%20sus%20servicios%20y%20disponibilidad%20para%20una%20cita." target="_blank" rel="noopener" class="hidden md:inline-flex btn-primary py-2.5 px-5 text-xs js-wa" data-es="Consultar" data-en="Contact us">Consultar</a>
+          <button id="menu-toggle" class="lg:hidden text-[#0D1530] p-2" aria-label="Abrir menú" aria-expanded="false" aria-controls="mobile-menu">
+            <iconify-icon id="menu-icon" icon="solar:hamburger-menu-linear" width="26"></iconify-icon>
+          </button>
+        </div>
+      </div>
+      <div id="mobile-menu" class="lg:hidden px-5">
+        <div class="flex flex-col gap-1 py-4 border-t border-[#0D1530]/10 text-[#25252D] font-medium">
+          <a href="index.html" class="py-3 js-menu-link" data-es="Inicio" data-en="Home">Inicio</a>
+          <a href="index.html#nosotros" class="py-3 js-menu-link" data-es="Nosotros" data-en="About">Nosotros</a>
+          <a href="/servicio" class="py-3 js-menu-link text-[#F50087]" data-es="Servicios" data-en="Services">Servicios</a>
+          <a href="galeria.html" class="py-3 js-menu-link" data-es="Galería" data-en="Gallery">Galería</a>
+          <a href="index.html#testimonios" class="py-3 js-menu-link" data-es="Testimonios" data-en="Testimonials">Testimonios</a>
+          <a href="index.html#ubicacion" class="py-3 js-menu-link" data-es="Ubicación" data-en="Location">Ubicación</a>
+          <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20recibir%20informaci%C3%B3n%20sobre%20sus%20servicios%20y%20disponibilidad%20para%20una%20cita." target="_blank" rel="noopener" class="btn-primary mt-3 js-wa js-menu-link" data-es="Consultar" data-en="Contact us">Consultar</a>
+        </div>
+      </div>
+    </nav>
+
+    <main class="">
+      <!-- ════════ HERO ════════ -->
+      <header class="relative pt-32 pb-12 px-5 md:px-10 overflow-hidden">
+        <div class="absolute top-28 -left-20 w-72 h-px rotate-[20deg] bg-gradient-to-r from-transparent via-[#F5CE68]/60 to-transparent pointer-events-none"></div>
+        <div class="absolute bottom-10 right-10 w-40 h-40 rounded-full bg-[#F50087]/5 blur-3xl pointer-events-none"></div>
+        <div class="max-w-[1240px] mx-auto text-center">
+          <span class="reveal inline-flex items-center gap-2 text-[11px] tracking-[0.25em] font-semibold text-[#F50087] mb-6 visible"></span>
+          <h1 class="reveal d100 font-display hero-title font-medium text-[#0D1530] mb-6 max-w-3xl mx-auto visible" data-es="Servicios diseñados para cuidar de ti." data-en="Services designed to care for you.">Servicios diseñados para cuidar de ti.</h1>
+          <p class="reveal d200 text-[#25252D]/70 font-light max-w-2xl mx-auto mb-8 leading-relaxed visible" data-es="Explora nuestros tratamientos faciales, corporales, tecnología estética, láser diodo y depilación con cera." data-en="Explore our facial treatments, body treatments, aesthetic technology, diode laser, and waxing services.">Explora nuestros tratamientos faciales, corporales, tecnología estética, láser diodo y depilación con cera.</p>
+          <div class="reveal d300 liquid-glass rounded-2xl px-5 py-4 flex items-start gap-3 max-w-2xl mx-auto text-left visible">
+            <iconify-icon icon="solar:shield-check-linear" width="22" class="text-[#F50087] mt-0.5 shrink-0"></iconify-icon>
+            <p class="text-sm font-medium text-[#0D1530]" data-es="Los servicios se coordinan mediante cita previa y se requiere un depósito para confirmar el espacio." data-en="Services are scheduled by appointment, and a deposit is required to confirm the appointment.">Los servicios se coordinan mediante cita previa y se requiere un depósito para confirmar el espacio.</p>
+          </div>
+        </div>
+      </header>
+
+      <!-- ════════ CATEGORY MENU ════════ -->
+      <div id="cat-menu" class="sticky top-[4.5rem] md:top-[6rem] z-40 px-0 md:px-10 py-3">
+        <div class="max-w-[1240px] mx-auto liquid-glass rounded-none md:rounded-full py-2 md:p-2">
+          <div class="flex flex-nowrap items-center md:justify-center gap-2 md:gap-3 overflow-x-auto hide-scrollbar scroll-smooth px-5 md:px-2 w-full">
+            <a href="#faciales" class="cat-pill min-h-[44px] shrink-0" data-cat="faciales">
+              <iconify-icon icon="solar:heart-linear" width="16" class=""></iconify-icon>
+              <span data-es="Faciales" data-en="Facials" class="">Faciales</span>
+            </a>
+            <a href="#tecnologia" class="cat-pill min-h-[44px] shrink-0" data-cat="tecnologia">
+              <iconify-icon icon="solar:stars-linear" width="16" class=""></iconify-icon>
+              <span data-es="Tecnología avanzada" data-en="Advanced Tech" class="">Tecnología avanzada</span>
+            </a>
+            <a href="#corporales" class="cat-pill min-h-[44px] shrink-0" data-cat="corporales">
+              <iconify-icon icon="solar:hand-heart-linear" width="16"></iconify-icon>
+              <span data-es="Corporales" data-en="Body">Corporales</span>
+            </a>
+            <a href="#laser" class="cat-pill min-h-[44px] shrink-0" data-cat="laser">
+              <iconify-icon icon="solar:bolt-linear" width="16"></iconify-icon>
+              <span data-es="Láser diodo" data-en="Diode Laser" class="">Láser diodo</span>
+            </a>
+            <a href="#cera" class="cat-pill min-h-[44px] shrink-0" data-cat="cera">
+              <iconify-icon icon="solar:leaf-linear" width="16"></iconify-icon>
+              <span data-es="Depilación con cera" data-en="Waxing" class="">Depilación con cera</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════════ FACIALES ════════ -->
+      <section class="py-20 px-5 md:px-10 scroll-mt-72 md:scroll-mt-48 cv-auto" id="faciales">
+        <div class="max-w-[1240px] mx-auto">
+          <div class="mb-12 reveal visible">
+            <span class="text-[11px] tracking-[0.25em] font-semibold text-[#F50087] flex items-center gap-2">
+              <iconify-icon icon="solar:heart-linear" width="16" class="text-[#F5CE68]"></iconify-icon>
+              <span data-es="CUIDADO FACIAL" data-en="FACIAL CARE">CUIDADO FACIAL</span>
+            </span>
+            <h2 class="font-display section-title font-medium text-[#0D1530] mt-3" data-es="Faciales" data-en="Facial Treatments">Faciales</h2>
+            <div class="gold-line w-40 mt-5"></div>
+          </div>
+          <div class="grid grid-cols-2 max-[359px]:grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-5" data-cards="">
+            <div class="card-hover bg-white rounded-2xl md:rounded-[1.5rem] border border-[#FFD6E3]/60 shadow-sm flex flex-col h-full overflow-hidden" data-name-es="Limpieza Facial Express" data-name-en="Express Facial Cleansing">
+              <div class="relative w-full pt-[75%] bg-[#FFF8F2] shrink-0">
+                <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/32322c3d-bdc2-4a23-88ad-5c45e2bf65c8_3840w.png" alt="Limpieza Facial Express" loading="lazy" class="absolute inset-0 w-full h-full object-cover">
+              </div>
+              <div class="p-3 md:p-4 lg:p-5 flex flex-col flex-1">
+                <div class="flex flex-col gap-0.5 mb-1.5">
+                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="Limpieza Facial Express" data-en="Express Facial Cleansing">Limpieza Facial Express</h3>
+                  <span class="font-display text-lg md:text-xl font-semibold text-[#F50087]">
+                    $49
+                  </span>
+                </div>
+                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3" data-es="Limpieza facial rápida que refresca y revitaliza tu piel." data-en="A quick facial cleansing that refreshes and revitalizes your skin.">Limpieza facial rápida que refresca y revitaliza tu piel.</p>
+                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Limpieza%20Facial%20Express.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all js-card-wa" data-es="Consultar" data-en="Inquire">Consultar</a>
+              </div>
+            </div>
+            <div class="card-hover bg-white rounded-2xl md:rounded-[1.5rem] border border-[#FFD6E3]/60 shadow-sm flex flex-col h-full overflow-hidden" data-name-es="Limpieza Facial Profunda" data-name-en="Deep Facial Cleansing">
+              <div class="relative w-full pt-[75%] bg-[#FFF8F2] shrink-0">
+                <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/7cddecac-1a1e-46a4-987a-ac63b19c65ca_3840w.png" alt="Limpieza Facial Profunda" loading="lazy" class="absolute inset-0 w-full h-full object-cover">
+              </div>
+              <div class="p-3 md:p-4 lg:p-5 flex flex-col flex-1">
+                <div class="flex flex-col gap-0.5 mb-1.5">
+                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="Limpieza Facial Profunda" data-en="Deep Facial Cleansing">Limpieza Facial Profunda</h3>
+                  <span class="font-display text-lg md:text-xl font-semibold text-[#F50087]">
+                    $65
+                  </span>
+                </div>
+                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3" data-es="Limpieza profunda para una piel más limpia y luminosa." data-en="Deep cleansing for cleaner, more radiant-looking skin.">Limpieza profunda para una piel más limpia y luminosa.</p>
+                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Limpieza%20Facial%20Profunda.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all js-card-wa" data-es="Consultar" data-en="Inquire">Consultar</a>
+              </div>
+            </div>
+            <div class="card-hover bg-white rounded-2xl md:rounded-[1.5rem] border border-[#FFD6E3]/60 shadow-sm flex flex-col h-full overflow-hidden" data-name-es="Booty Facial" data-name-en="Booty Facial">
+              <div class="relative w-full pt-[75%] bg-[#FFF8F2] shrink-0">
+                <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/cb909432-7f80-451f-9e6e-9dd566f8d588_3840w.png" alt="Booty Facial" loading="lazy" class="absolute inset-0 w-full h-full object-cover">
+              </div>
+              <div class="p-3 md:p-4 lg:p-5 flex flex-col flex-1">
+                <div class="flex flex-col gap-0.5 mb-1.5">
+                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="Booty Facial" data-en="Booty Facial">Booty Facial</h3>
+                  <span class="font-display text-lg md:text-xl font-semibold text-[#F50087]">
+                    $75
+                  </span>
+                </div>
+                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3" data-es="Tratamiento de limpieza e hidratación para la piel del área glútea." data-en="Cleansing and hydrating treatment for the skin of the glute area.">Tratamiento de limpieza e hidratación para la piel del área glútea.</p>
+                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Booty%20Facial.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all js-card-wa" data-es="Consultar" data-en="Inquire">Consultar</a>
+              </div>
+            </div>
+            <div class="card-hover bg-white rounded-2xl md:rounded-[1.5rem] border border-[#FFD6E3]/60 shadow-sm flex flex-col h-full overflow-hidden" data-name-es="Espalda Facial" data-name-en="Back Facial">
+              <div class="relative w-full pt-[75%] bg-[#FFF8F2] shrink-0">
+                <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/17c22a47-af80-40c3-96d6-49bdb726af31_3840w.png" alt="Espalda Facial" loading="lazy" class="absolute inset-0 w-full h-full object-cover">
+              </div>
+              <div class="p-3 md:p-4 lg:p-5 flex flex-col flex-1">
+                <div class="flex flex-col gap-0.5 mb-1.5">
+                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="Espalda Facial" data-en="Back Facial">Espalda Facial</h3>
+                  <span class="font-display text-lg md:text-xl font-semibold text-[#F50087]">
+                    $85
+                  </span>
+                </div>
+                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3" data-es="Limpieza e hidratación profesional para la piel de la espalda." data-en="Professional cleansing and hydration for the skin of the back.">Limpieza e hidratación profesional para la piel de la espalda.</p>
+                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Espalda%20Facial.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all js-card-wa" data-es="Consultar" data-en="Inquire">Consultar</a>
+              </div>
+            </div>
+            <div class="card-hover bg-white rounded-2xl md:rounded-[1.5rem] border border-[#FFD6E3]/60 shadow-sm flex flex-col h-full overflow-hidden" data-name-es="Facial Hidratante" data-name-en="Hydrating Facial">
+              <div class="relative w-full pt-[75%] bg-[#FFF8F2] shrink-0">
+                <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/958999e2-41d4-4731-b9ca-41088bc151d8_3840w.png" alt="Facial Hidratante" loading="lazy" class="absolute inset-0 w-full h-full object-cover">
+              </div>
+              <div class="p-3 md:p-4 lg:p-5 flex flex-col flex-1">
+                <div class="flex flex-col gap-0.5 mb-1.5">
+                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="Facial Hidratante" data-en="Hydrating Facial">Facial Hidratante</h3>
+                  <span class="font-display text-lg md:text-xl font-semibold text-[#F50087]">
+                    $55
+                  </span>
+                </div>
+                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3" data-es="Aporta hidratación y suavidad para una piel más confortable." data-en="Provides hydration and softness for more comfortable-feeling skin.">Aporta hidratación y suavidad para una piel más confortable.</p>
+                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Facial%20Hidratante.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all js-card-wa" data-es="Consultar" data-en="Inquire">Consultar</a>
+              </div>
+            </div>
+            <div class="card-hover bg-white rounded-2xl md:rounded-[1.5rem] border border-[#FFD6E3]/60 shadow-sm flex flex-col h-full overflow-hidden" data-name-es="Facial Antiacné" data-name-en="Acne-Care Facial">
+              <div class="relative w-full pt-[75%] bg-[#FFF8F2] shrink-0">
+                <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/06b78508-b3a0-48e9-b316-2ac7b36c3d48_3840w.png" alt="Facial Antiacné" loading="lazy" class="absolute inset-0 w-full h-full object-cover">
+              </div>
+              <div class="p-3 md:p-4 lg:p-5 flex flex-col flex-1">
+                <div class="flex flex-col gap-0.5 mb-1.5">
+                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="Facial Antiacné" data-en="Acne-Care Facial">Facial Antiacné</h3>
+                  <span class="font-display text-lg md:text-xl font-semibold text-[#F50087]">
+                    $75
+                  </span>
+                </div>
+                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3" data-es="Cuidado facial enfocado en pieles con tendencia acneica." data-en="Facial care focused on acne-prone skin types.">Cuidado facial enfocado en pieles con tendencia acneica.</p>
+                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Facial%20Antiacn%C3%A9.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all js-card-wa" data-es="Consultar" data-en="Inquire">Consultar</a>
+              </div>
+            </div>
+            <div class="card-hover bg-white rounded-2xl md:rounded-[1.5rem] border border-[#FFD6E3]/60 shadow-sm flex flex-col h-full overflow-hidden" data-name-es="Facial Antiedad" data-name-en="Age-Defying Facial">
+              <div class="relative w-full pt-[75%] bg-[#FFF8F2] shrink-0">
+                <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/ad86306a-7c04-4e3e-8899-15fb55922c0d_3840w.png" alt="Facial Antiedad" loading="lazy" class="absolute inset-0 w-full h-full object-cover">
+              </div>
+              <div class="p-3 md:p-4 lg:p-5 flex flex-col flex-1">
+                <div class="flex flex-col gap-0.5 mb-1.5">
+                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="Facial Antiedad" data-en="Age-Defying Facial">Facial Antiedad</h3>
+                  <span class="font-display text-lg md:text-xl font-semibold text-[#F50087]">
+                    $75
+                  </span>
+                </div>
+                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3" data-es="Tratamiento que ayuda a mejorar la apariencia y firmeza de la piel." data-en="A treatment that helps improve the appearance and firmness of the skin.">Tratamiento que ayuda a mejorar la apariencia y firmeza de la piel.</p>
+                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Facial%20Antiedad.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all js-card-wa" data-es="Consultar" data-en="Inquire">Consultar</a>
+              </div>
+            </div>
+            <div class="card-hover bg-white rounded-2xl md:rounded-[1.5rem] border border-[#FFD6E3]/60 shadow-sm flex flex-col h-full overflow-hidden" data-name-es="Facial Despigmentante" data-name-en="Brightening Facial">
+              <div class="relative w-full pt-[75%] bg-[#FFF8F2] shrink-0">
+                <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/b59ead23-2bf6-4f64-b873-e8d21c331fbb_3840w.png" alt="Facial Despigmentante" loading="lazy" class="absolute inset-0 w-full h-full object-cover">
+              </div>
+              <div class="p-3 md:p-4 lg:p-5 flex flex-col flex-1">
+                <div class="flex flex-col gap-0.5 mb-1.5">
+                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="Facial Despigmentante" data-en="Brightening Facial">Facial Despigmentante</h3>
+                  <span class="font-display text-lg md:text-xl font-semibold text-[#F50087]">
+                    $75
+                  </span>
+                </div>
+                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3" data-es="Cuidado enfocado en mejorar la luminosidad y uniformidad del tono." data-en="Care focused on improving radiance and a more even-looking tone.">Cuidado enfocado en mejorar la luminosidad y uniformidad del tono.</p>
+                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Facial%20Despigmentante.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all js-card-wa" data-es="Consultar" data-en="Inquire">Consultar</a>
+              </div>
+            </div>
+            <div class="card-hover bg-white rounded-2xl md:rounded-[1.5rem] border border-[#FFD6E3]/60 shadow-sm flex flex-col h-full overflow-hidden" data-name-es="Dermaplaning" data-name-en="Dermaplaning">
+              <div class="relative w-full pt-[75%] bg-[#FFF8F2] shrink-0">
+                <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/6409bb80-1cc5-45dd-9969-3b5f58e2d1d8_3840w.png" alt="Dermaplaning" loading="lazy" class="absolute inset-0 w-full h-full object-cover">
+              </div>
+              <div class="p-3 md:p-4 lg:p-5 flex flex-col flex-1">
+                <div class="flex flex-col gap-0.5 mb-1.5">
+                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="Dermaplaning" data-en="Dermaplaning">Dermaplaning</h3>
+                  <span class="font-display text-lg md:text-xl font-semibold text-[#F50087]">
+                    $75
+                  </span>
+                </div>
+                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3" data-es="Exfoliación que deja la piel suave y con apariencia renovada." data-en="Exfoliation that leaves the skin smooth with a renewed appearance.">Exfoliación que deja la piel suave y con apariencia renovada.</p>
+                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Dermaplaning.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all js-card-wa" data-es="Consultar" data-en="Inquire">Consultar</a>
+              </div>
+            </div>
+            <div class="card-hover bg-white rounded-2xl md:rounded-[1.5rem] border border-[#FFD6E3]/60 shadow-sm flex flex-col h-full overflow-hidden" data-name-es="Oxigenoterapia Facial" data-name-en="Oxygen Facial Therapy">
+              <div class="relative w-full pt-[75%] bg-[#FFF8F2] shrink-0">
+                <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/d2666988-b0f9-4e81-a973-1305b8cadb7b_3840w.png" alt="Oxigenoterapia Facial" loading="lazy" class="absolute inset-0 w-full h-full object-cover">
+              </div>
+              <div class="p-3 md:p-4 lg:p-5 flex flex-col flex-1">
+                <div class="flex flex-col gap-0.5 mb-1.5">
+                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="Oxigenoterapia Facial" data-en="Oxygen Facial Therapy">Oxigenoterapia Facial</h3>
+                  <span class="font-display text-lg md:text-xl font-semibold text-[#F50087]">
+                    $75
+                  </span>
+                </div>
+                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3" data-es="Tratamiento que aporta frescura y vitalidad al rostro." data-en="A treatment that brings freshness and vitality to the face.">Tratamiento que aporta frescura y vitalidad al rostro.</p>
+                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Oxigenoterapia%20Facial.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all js-card-wa" data-es="Consultar" data-en="Inquire">Consultar</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ════════ TECNOLOGÍA AVANZADA ════════ -->
+      <section id="tecnologia" class="py-20 px-5 md:px-10 bg-[#FFF8F2] scroll-mt-72 md:scroll-mt-48 cv-auto">
+        <div class="max-w-[1240px] mx-auto">
+          <div class="mb-12 reveal">
+            <span class="text-[11px] tracking-[0.25em] font-semibold text-[#F50087] flex items-center gap-2">
+              <iconify-icon icon="solar:stars-linear" width="16" class="text-[#F5CE68]"></iconify-icon>
+              <span data-es="ESTÉTICA AVANZADA" data-en="ADVANCED AESTHETICS">ESTÉTICA AVANZADA</span>
+            </span>
+            <h2 class="font-display section-title font-medium text-[#0D1530] mt-3" data-es="Tecnología avanzada" data-en="Advanced Aesthetics">Tecnología avanzada</h2>
+            <div class="gold-line w-40 mt-5"></div>
+          </div>
+          <div class="grid grid-cols-2 max-[359px]:grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-5" data-cards="">
+            <div class="card-hover bg-white rounded-2xl md:rounded-[1.5rem] border border-[#FFD6E3]/60 shadow-sm flex flex-col h-full overflow-hidden" data-name-es="Dermapen" data-name-en="Dermapen">
+              <div class="relative w-full pt-[75%] bg-[#FFF8F2] shrink-0">
+                <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/48fe28cb-3cc3-4812-ac51-f5697aca86b1_3840w.png" alt="Dermapen" loading="lazy" class="absolute inset-0 w-full h-full object-cover">
+              </div>
+              <div class="p-3 md:p-4 lg:p-5 flex flex-col flex-1">
+                <div class="flex flex-col gap-0.5 mb-1.5">
+                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="Dermapen" data-en="Dermapen">Dermapen</h3>
+                  <span class="font-display text-lg md:text-xl font-semibold text-[#F50087]">
+                    $75
+                  </span>
+                </div>
+                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3" data-es="Tratamiento facial con tecnología de microagujas." data-en="Facial treatment using microneedling technology.">Tratamiento facial con tecnología de microagujas.</p>
+                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Dermapen.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all js-card-wa" data-es="Consultar" data-en="Inquire">Consultar</a>
+              </div>
+            </div>
+            <div class="card-hover bg-white rounded-2xl md:rounded-[1.5rem] border border-[#FFD6E3]/60 shadow-sm flex flex-col h-full overflow-hidden" data-name-es="HIFU Facial" data-name-en="HIFU Facial">
+              <div class="relative w-full pt-[75%] bg-[#FFF8F2] shrink-0">
+                <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/3486e46f-63a6-4d40-9b48-57a6712bef3d_3840w.png" alt="HIFU Facial" loading="lazy" class="absolute inset-0 w-full h-full object-cover">
+              </div>
+              <div class="p-3 md:p-4 lg:p-5 flex flex-col flex-1">
+                <div class="flex flex-col gap-0.5 mb-1.5">
+                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="HIFU Facial" data-en="HIFU Facial">HIFU Facial</h3>
+                  <span class="font-display text-lg md:text-xl font-semibold text-[#F50087]">
+                    $95
+                  </span>
+                </div>
+                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3" data-es="Tecnología de ultrasonido enfocada para el cuidado facial." data-en="Focused ultrasound technology for facial care.">Tecnología de ultrasonido enfocada para el cuidado facial.</p>
+                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20HIFU%20Facial.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all js-card-wa" data-es="Consultar" data-en="Inquire">Consultar</a>
+              </div>
+            </div>
+            <div class="card-hover bg-white rounded-2xl md:rounded-[1.5rem] border border-[#FFD6E3]/60 shadow-sm flex flex-col h-full overflow-hidden" data-name-es="Morpheus8" data-name-en="Morpheus8">
+              <div class="relative w-full pt-[75%] bg-[#FFF8F2] shrink-0">
+                <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/c5f13a18-fef1-4f50-8b10-755e61b783e8_3840w.png" alt="Morpheus8" loading="lazy" class="absolute inset-0 w-full h-full object-cover">
+              </div>
+              <div class="p-3 md:p-4 lg:p-5 flex flex-col flex-1">
+                <div class="flex flex-col gap-0.5 mb-1.5">
+                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="Morpheus8" data-en="Morpheus8">Morpheus8</h3>
+                  <span class="font-display text-lg md:text-xl font-semibold text-[#F50087]">
+                    $195
+                  </span>
+                </div>
+                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3" data-es="Tecnología avanzada combinada para el cuidado de la piel." data-en="Advanced combined technology for skin care.">Tecnología avanzada combinada para el cuidado de la piel.</p>
+                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Morpheus8.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all js-card-wa" data-es="Consultar" data-en="Inquire">Consultar</a>
+              </div>
+            </div>
+            <div class="card-hover bg-white rounded-2xl md:rounded-[1.5rem] border border-[#FFD6E3]/60 shadow-sm flex flex-col h-full overflow-hidden" data-name-es="Microdermoabrasión" data-name-en="Microdermabrasion">
+              <div class="relative w-full pt-[75%] bg-[#FFF8F2] shrink-0">
+                <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/c18e9862-ed40-459e-b2a7-042a6edd84d8_3840w.png" alt="Microdermoabrasión" loading="lazy" class="absolute inset-0 w-full h-full object-cover">
+              </div>
+              <div class="p-3 md:p-4 lg:p-5 flex flex-col flex-1">
+                <div class="flex flex-col gap-0.5 mb-1.5">
+                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="Microdermoabrasión" data-en="Microdermabrasion">Microdermoabrasión</h3>
+                  <span class="font-display text-lg md:text-xl font-semibold text-[#F50087]">
+                    $55
+                  </span>
+                </div>
+                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3" data-es="Exfoliación mecánica que renueva la superficie de la piel." data-en="Mechanical exfoliation that renews the skin surface.">Exfoliación mecánica que renueva la superficie de la piel.</p>
+                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Microdermoabrasi%C3%B3n.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all js-card-wa" data-es="Consultar" data-en="Inquire">Consultar</a>
+              </div>
+            </div>
+            <div class="card-hover bg-white rounded-2xl md:rounded-[1.5rem] border border-[#FFD6E3]/60 shadow-sm flex flex-col h-full overflow-hidden" data-name-es="Radiofrecuencia Facial" data-name-en="Facial Radiofrequency">
+              <div class="relative w-full pt-[75%] bg-[#FFF8F2] shrink-0">
+                <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/5709b334-9983-4ca7-9e41-123e78cac068_3840w.png" alt="Radiofrecuencia Facial" loading="lazy" class="absolute inset-0 w-full h-full object-cover">
+              </div>
+              <div class="p-3 md:p-4 lg:p-5 flex flex-col flex-1">
+                <div class="flex flex-col gap-0.5 mb-1.5">
+                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="Radiofrecuencia Facial" data-en="Facial Radiofrequency">Radiofrecuencia Facial</h3>
+                  <span class="font-display text-lg md:text-xl font-semibold text-[#F50087]">
+                    $55
+                  </span>
+                </div>
+                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3" data-es="Tecnología de radiofrecuencia para el cuidado facial." data-en="Radiofrequency technology for facial care.">Tecnología de radiofrecuencia para el cuidado facial.</p>
+                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Radiofrecuencia%20Facial.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all js-card-wa" data-es="Consultar" data-en="Inquire">Consultar</a>
+              </div>
+            </div>
+            <div class="card-hover bg-white rounded-2xl md:rounded-[1.5rem] border border-[#FFD6E3]/60 shadow-sm flex flex-col h-full overflow-hidden" data-name-es="Terapia LED" data-name-en="LED Light Therapy">
+              <div class="relative w-full pt-[75%] bg-[#FFF8F2] shrink-0">
+                <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/0c8a81f6-4b0e-44e2-a61f-d69d4b023caf_3840w.png" alt="Terapia LED" loading="lazy" class="absolute inset-0 w-full h-full object-cover">
+              </div>
+              <div class="p-3 md:p-4 lg:p-5 flex flex-col flex-1">
+                <div class="flex flex-col gap-0.5 mb-1.5">
+                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="Terapia LED" data-en="LED Light Therapy">Terapia LED</h3>
+                  <span class="font-display text-lg md:text-xl font-semibold text-[#F50087]">
+                    $55
+                  </span>
+                </div>
+                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3" data-es="Sesión de luz LED como complemento del cuidado facial." data-en="LED light session as a complement to facial care.">Sesión de luz LED como complemento del cuidado facial.</p>
+                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Terapia%20LED.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all js-card-wa" data-es="Consultar" data-en="Inquire">Consultar</a>
+              </div>
+            </div>
+            <div class="card-hover bg-white rounded-2xl md:rounded-[1.5rem] border border-[#FFD6E3]/60 shadow-sm flex flex-col h-full overflow-hidden" data-name-es="Crystal Carboxy" data-name-en="Crystal Carboxy">
+              <div class="relative w-full pt-[75%] bg-[#FFF8F2] shrink-0">
+                <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/1893add8-63a7-4ee6-bfbb-c9206f81b501_3840w.png" alt="Crystal Carboxy" loading="lazy" class="absolute inset-0 w-full h-full object-cover">
+              </div>
+              <div class="p-3 md:p-4 lg:p-5 flex flex-col flex-1">
+                <div class="flex flex-col gap-0.5 mb-1.5">
+                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="Crystal Carboxy" data-en="Crystal Carboxy">Crystal Carboxy</h3>
+                  <span class="font-display text-lg md:text-xl font-semibold text-[#F50087]">
+                    $85
+                  </span>
+                </div>
+                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3" data-es="Tratamiento facial con tecnología de carboxiterapia." data-en="Facial treatment using carboxytherapy technology.">Tratamiento facial con tecnología de carboxiterapia.</p>
+                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Crystal%20Carboxy.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all js-card-wa" data-es="Consultar" data-en="Inquire">Consultar</a>
+              </div>
+            </div>
+            <div class="card-hover bg-white rounded-2xl md:rounded-[1.5rem] border border-[#FFD6E3]/60 shadow-sm flex flex-col h-full overflow-hidden" data-name-es="Esperma de Salmón" data-name-en="Salmon-Derived Skin Treatment">
+              <div class="relative w-full pt-[75%] bg-[#FFF8F2] shrink-0">
+                <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/1f742a84-261b-4643-b70d-2f2110856319_3840w.png" alt="Esperma de Salmón" loading="lazy" class="absolute inset-0 w-full h-full object-cover">
+              </div>
+              <div class="p-3 md:p-4 lg:p-5 flex flex-col flex-1">
+                <div class="flex flex-col gap-0.5 mb-1.5">
+                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="Esperma de Salmón" data-en="Salmon-Derived Skin Treatment">Esperma de Salmón</h3>
+                  <span class="font-display text-lg md:text-xl font-semibold text-[#F50087]">
+                    $85
+                  </span>
+                </div>
+                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3" data-es="Tratamiento facial avanzado para el cuidado de la piel." data-en="Advanced facial treatment for skin care.">Tratamiento facial avanzado para el cuidado de la piel.</p>
+                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Esperma%20de%20Salm%C3%B3n.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all js-card-wa" data-es="Consultar" data-en="Inquire">Consultar</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ════════ TRATAMIENTOS CORPORALES ════════ -->
+      <section id="corporales" class="py-20 px-5 md:px-10 scroll-mt-72 md:scroll-mt-48 cv-auto">
+        <div class="max-w-[1240px] mx-auto">
+          <div class="mb-12 reveal">
+            <span class="text-[11px] tracking-[0.25em] font-semibold text-[#F50087] flex items-center gap-2">
+              <iconify-icon icon="solar:hand-heart-linear" width="16" class="text-[#F5CE68]"></iconify-icon>
+              <span data-es="BIENESTAR CORPORAL" data-en="BODY WELLNESS">BIENESTAR CORPORAL</span>
+            </span>
+            <h2 class="font-display section-title font-medium text-[#0D1530] mt-3" data-es="Tratamientos corporales" data-en="Body Treatments">Tratamientos corporales</h2>
+            <div class="gold-line w-40 mt-5"></div>
+          </div>
+          <div class="grid grid-cols-2 max-[359px]:grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-5">
+            <div class="card-hover bg-white rounded-2xl md:rounded-[1.5rem] border border-[#FFD6E3]/60 shadow-sm flex flex-col h-full overflow-hidden">
+              <div class="relative w-full pt-[75%] bg-[#FFF8F2] shrink-0">
+                <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/e58f7dd4-bb0c-4fd5-8637-c62455e17f16_3840w.png" alt="Maderoterapia" loading="lazy" class="absolute inset-0 w-full h-full object-cover">
+              </div>
+              <div class="p-3 md:p-4 lg:p-5 flex flex-col flex-1">
+                <div class="flex flex-col gap-0.5 mb-1.5">
+                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="Maderoterapia" data-en="Wood Therapy">Maderoterapia</h3>
+                  <div class="flex flex-col gap-1 mt-1">
+                    <div class="flex justify-between items-center text-[11px] md:text-xs bg-[#FFF8F2] px-2 py-1 rounded border border-[#FFD6E3]/50">
+                      <span class="text-[#25252D] font-medium" data-es="Cuerpo completo" data-en="Full body">Cuerpo completo</span>
+                      <span class="font-display text-sm font-semibold text-[#F50087]">
+                        $80
+                      </span>
+                    </div>
+                    <div class="flex justify-between items-center text-[11px] md:text-xs bg-[#FFF8F2] px-2 py-1 rounded border border-[#FFD6E3]/50">
+                      <span class="text-[#25252D] font-medium" data-es="Una zona" data-en="One area">Una zona</span>
+                      <span class="font-display text-sm font-semibold text-[#F50087]">
+                        $50
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3 mt-1" data-es="Masaje corporal con instrumentos de madera." data-en="Body massage using wooden instruments.">Masaje corporal con instrumentos de madera.</p>
+                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Maderoterapia.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all" data-es="Consultar" data-en="Inquire">Consultar</a>
+              </div>
+            </div>
+            <div class="card-hover bg-white rounded-2xl md:rounded-[1.5rem] border border-[#FFD6E3]/60 shadow-sm flex flex-col h-full overflow-hidden">
+              <div class="relative w-full pt-[75%] bg-[#FFF8F2] shrink-0">
+                <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/34147076-0165-4370-b5ff-93ad7c5311ed_3840w.png" alt="Drenaje Linfático" loading="lazy" class="absolute inset-0 w-full h-full object-cover">
+              </div>
+              <div class="p-3 md:p-4 lg:p-5 flex flex-col flex-1">
+                <div class="flex flex-col gap-0.5 mb-1.5">
+                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="Drenaje Linfático" data-en="Lymphatic Drainage Massage">Drenaje Linfático</h3>
+                  <span class="font-display text-lg md:text-xl font-semibold text-[#F50087]">
+                    $75
+                  </span>
+                </div>
+                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3" data-es="Masaje suave enfocado en el bienestar corporal." data-en="Gentle massage focused on body wellness.">Masaje suave enfocado en el bienestar corporal.</p>
+                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Drenaje%20Linf%C3%A1tico.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all" data-es="Consultar" data-en="Inquire">Consultar</a>
+              </div>
+            </div>
+            <div class="card-hover bg-white rounded-2xl md:rounded-[1.5rem] border border-[#FFD6E3]/60 shadow-sm flex flex-col h-full overflow-hidden">
+              <div class="relative w-full pt-[75%] bg-[#FFF8F2] shrink-0">
+                <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/cb40ea80-ed07-41a1-9446-fa7055b065b2_3840w.png" alt="Presoterapia" loading="lazy" class="absolute inset-0 w-full h-full object-cover">
+              </div>
+              <div class="p-3 md:p-4 lg:p-5 flex flex-col flex-1">
+                <div class="flex flex-col gap-0.5 mb-1.5">
+                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="Presoterapia" data-en="Pressotherapy">Presoterapia</h3>
+                  <span class="font-display text-lg md:text-xl font-semibold text-[#F50087]">
+                    $50
+                  </span>
+                </div>
+                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3" data-es="Sesión de compresión para una sensación de ligereza." data-en="Compression session for a feeling of lightness.">Sesión de compresión para una sensación de ligereza.</p>
+                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Presoterapia.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all" data-es="Consultar" data-en="Inquire">Consultar</a>
+              </div>
+            </div>
+            <div class="card-hover bg-white rounded-2xl md:rounded-[1.5rem] border border-[#FFD6E3]/60 shadow-sm flex flex-col h-full overflow-hidden">
+              <div class="relative w-full pt-[75%] bg-[#FFF8F2] shrink-0">
+                <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/239b6fec-d4c9-4f4e-aefa-62d452773875_3840w.png" alt="EMSCULPT" loading="lazy" class="absolute inset-0 w-full h-full object-cover">
+              </div>
+              <div class="p-3 md:p-4 lg:p-5 flex flex-col flex-1">
+                <div class="flex flex-col gap-0.5 mb-1.5">
+                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="EMSCULPT" data-en="EMSCULPT">EMSCULPT</h3>
+                  <span class="font-display text-lg md:text-xl font-semibold text-[#F50087]">
+                    $50
+                  </span>
+                </div>
+                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3" data-es="Sesión corporal con tecnología de estimulación muscular." data-en="Body session using muscle-stimulation technology.">Sesión corporal con tecnología de estimulación muscular.</p>
+                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20EMSCULPT.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all" data-es="Consultar" data-en="Inquire">Consultar</a>
+              </div>
+            </div>
+            <div class="card-hover bg-white rounded-2xl md:rounded-[1.5rem] border border-[#FFD6E3]/60 shadow-sm flex flex-col h-full overflow-hidden">
+              <div class="relative w-full pt-[75%] bg-[#FFF8F2] shrink-0">
+                <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/326f3b56-97e5-4a78-bc62-d050e6d693cc_3840w.png" alt="Manta Térmica" loading="lazy" class="absolute inset-0 w-full h-full object-cover">
+              </div>
+              <div class="p-3 md:p-4 lg:p-5 flex flex-col flex-1">
+                <div class="flex flex-col gap-0.5 mb-1.5">
+                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="Manta Térmica" data-en="Thermal Blanket Session">Manta Térmica</h3>
+                  <span class="font-display text-lg md:text-xl font-semibold text-[#F50087]">
+                    $50
+                  </span>
+                </div>
+                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3" data-es="Sesión de calor como parte del cuidado corporal." data-en="Heat session as part of body care.">Sesión de calor como parte del cuidado corporal.</p>
+                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Manta%20T%C3%A9rmica.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all" data-es="Consultar" data-en="Inquire">Consultar</a>
+              </div>
+            </div>
+            <div class="card-hover bg-white rounded-2xl md:rounded-[1.5rem] border border-[#FFD6E3]/60 shadow-sm flex flex-col h-full overflow-hidden">
+              <div class="relative w-full pt-[75%] bg-[#FFF8F2] shrink-0">
+                <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/0f00f13c-5b8f-49ed-9dd6-df1d5adcb6fe_3840w.png" alt="Detox Iónico" loading="lazy" class="absolute inset-0 w-full h-full object-cover">
+              </div>
+              <div class="p-3 md:p-4 lg:p-5 flex flex-col flex-1">
+                <div class="flex flex-col gap-0.5 mb-1.5">
+                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="Detox Iónico" data-en="Ionic Foot Session">Detox Iónico</h3>
+                  <span class="font-display text-lg md:text-xl font-semibold text-[#F50087]">
+                    $30
+                  </span>
+                </div>
+                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3" data-es="Sesión relajante de pies como complemento de bienestar." data-en="Relaxing foot session as a wellness complement.">Sesión relajante de pies como complemento de bienestar.</p>
+                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Detox%20I%C3%B3nico.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all" data-es="Consultar" data-en="Inquire">Consultar</a>
+              </div>
+            </div>
+            <div class="card-hover bg-white rounded-2xl md:rounded-[1.5rem] border border-[#FFD6E3]/60 shadow-sm flex flex-col h-full overflow-hidden">
+              <div class="relative w-full pt-[75%] bg-[#FFF8F2] shrink-0">
+                <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/fc630786-9314-4910-9362-8b86d38f8f44_3840w.png" alt="Reducción de Medidas" loading="lazy" class="absolute inset-0 w-full h-full object-cover">
+              </div>
+              <div class="p-3 md:p-4 lg:p-5 flex flex-col flex-1">
+                <div class="flex flex-col gap-0.5 mb-1.5">
+                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="Reducción de Medidas" data-en="Body Contouring Treatment">Reducción de Medidas</h3>
+                  <div class="flex flex-col gap-1 mt-1">
+                    <div class="flex justify-between items-center text-[11px] md:text-xs bg-[#FFF8F2] px-2 py-1 rounded border border-[#FFD6E3]/50">
+                      <span class="text-[#25252D] font-medium" data-es="Cuerpo completo" data-en="Full body">Cuerpo completo</span>
+                      <span class="font-display text-sm font-semibold text-[#F50087]">
+                        $80
+                      </span>
+                    </div>
+                    <div class="flex justify-between items-center text-[11px] md:text-xs bg-[#FFF8F2] px-2 py-1 rounded border border-[#FFD6E3]/50">
+                      <span class="text-[#25252D] font-medium" data-es="Una zona" data-en="One area">Una zona</span>
+                      <span class="font-display text-sm font-semibold text-[#F50087]">
+                        $50
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3 mt-1" data-es="Tratamiento corporal enfocado en moldear la figura." data-en="Body treatment focused on shaping the figure.">Tratamiento corporal enfocado en moldear la figura.</p>
+                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Reducci%C3%B3n%20de%20Medidas.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all" data-es="Consultar" data-en="Inquire">Consultar</a>
+              </div>
+            </div>
+            <div class="card-hover bg-white rounded-2xl md:rounded-[1.5rem] border border-[#FFD6E3]/60 shadow-sm flex flex-col h-full overflow-hidden">
+              <div class="relative w-full pt-[75%] bg-[#FFF8F2] shrink-0">
+                <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/07cc8da2-7f35-4779-a455-2cc935a14be3_3840w.png" alt="Reafirmación Corporal" loading="lazy" class="absolute inset-0 w-full h-full object-cover">
+              </div>
+              <div class="p-3 md:p-4 lg:p-5 flex flex-col flex-1">
+                <div class="flex flex-col gap-0.5 mb-1.5">
+                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="Reafirmación Corporal" data-en="Body Firming Treatment">Reafirmación Corporal</h3>
+                  <div class="flex flex-col gap-1 mt-1">
+                    <div class="flex justify-between items-center text-[11px] md:text-xs bg-[#FFF8F2] px-2 py-1 rounded border border-[#FFD6E3]/50">
+                      <span class="text-[#25252D] font-medium" data-es="Cuerpo completo" data-en="Full body">Cuerpo completo</span>
+                      <span class="font-display text-sm font-semibold text-[#F50087]">
+                        $80
+                      </span>
+                    </div>
+                    <div class="flex justify-between items-center text-[11px] md:text-xs bg-[#FFF8F2] px-2 py-1 rounded border border-[#FFD6E3]/50">
+                      <span class="text-[#25252D] font-medium" data-es="Una zona" data-en="One area">Una zona</span>
+                      <span class="font-display text-sm font-semibold text-[#F50087]">
+                        $50
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3 mt-1" data-es="Tratamiento que ayuda a mejorar la apariencia de firmeza." data-en="A treatment that helps improve the appearance of firmness.">Tratamiento que ayuda a mejorar la apariencia de firmeza.</p>
+                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Reafirmaci%C3%B3n%20Corporal.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all" data-es="Consultar" data-en="Inquire">Consultar</a>
+              </div>
+            </div>
+            <div class="card-hover bg-white rounded-2xl md:rounded-[1.5rem] border border-[#FFD6E3]/60 shadow-sm flex flex-col h-full overflow-hidden">
+              <div class="relative w-full pt-[75%] bg-[#FFF8F2] shrink-0">
+                <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/68e1eb50-456c-406c-afc1-ad0e90346fc1_3840w.png" alt="Exfoliación Corporal" loading="lazy" class="absolute inset-0 w-full h-full object-cover">
+              </div>
+              <div class="p-3 md:p-4 lg:p-5 flex flex-col flex-1">
+                <div class="flex flex-col gap-0.5 mb-1.5">
+                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="Exfoliación Corporal" data-en="Body Exfoliation">Exfoliación Corporal</h3>
+                  <span class="font-display text-lg md:text-xl font-semibold text-[#F50087]">
+                    $75
+                  </span>
+                </div>
+                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3" data-es="Exfoliación que deja la piel suave y renovada." data-en="Exfoliation that leaves the skin smooth and renewed.">Exfoliación que deja la piel suave y renovada.</p>
+                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Exfoliaci%C3%B3n%20Corporal.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all" data-es="Consultar" data-en="Inquire">Consultar</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ════════ LÁSER DIODO ════════ -->
+      <section id="laser" class="py-20 px-5 md:px-10 bg-[#FFF8F2] scroll-mt-72 md:scroll-mt-48 cv-auto">
+        <div class="max-w-[1240px] mx-auto">
+          <div class="mb-10 reveal">
+            <span class="text-[11px] tracking-[0.25em] font-semibold text-[#F50087] flex items-center gap-2">
+              <iconify-icon icon="solar:bolt-linear" width="16" class="text-[#F5CE68]"></iconify-icon>
+              <span data-es="DEPILACIÓN LÁSER" data-en="LASER HAIR REMOVAL">DEPILACIÓN LÁSER</span>
+            </span>
+            <h2 class="font-display section-title font-medium text-[#0D1530] mt-3" data-es="Láser diodo" data-en="Diode Laser">Láser diodo</h2>
+            <div class="gold-line w-40 mt-5"></div>
+            <div class="flex flex-wrap gap-3 mt-6">
+              <span class="inline-flex items-center gap-2 liquid-glass rounded-full px-4 py-2 text-xs font-medium text-[#0D1530]">
+                <iconify-icon icon="solar:layers-linear" width="16" class="text-[#F50087]"></iconify-icon>
+                <span data-es="Paquetes de 8 sesiones" data-en="8-session packages">Paquetes de 8 sesiones</span>
+              </span>
+              <span class="inline-flex items-center gap-2 liquid-glass rounded-full px-4 py-2 text-xs font-medium text-[#0D1530]">
+                <iconify-icon icon="solar:wallet-money-linear" width="16" class="text-[#F50087]"></iconify-icon>
+                <span data-es="Depósito requerido: $50" data-en="Required deposit: $50" class="">Depósito requerido: $50</span>
+              </span>
+            </div>
+          </div>
+          <div class="mb-8 rounded-[1.5rem] border border-[#FFD6E3]/60 overflow-hidden h-48 md:h-64 reveal shadow-sm">
+            <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/55ebb81b-9abc-46e4-9c85-a1a235129cd7_3840w.png" alt="Laser Hair Removal" loading="lazy" class="w-full h-full object-cover">
+          </div>
+          <div id="laser-groups" class="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+            <div class="bg-white rounded-[1.5rem] border border-[#0D1530]/8 overflow-hidden">
+              <button class="acc-trigger w-full flex items-center justify-between px-6 py-5 text-left" aria-expanded="false">
+                <span class="flex items-center gap-3">
+                  <span class="w-10 h-10 rounded-full bg-[#FFF8F2] flex items-center justify-center">
+                    <iconify-icon icon="solar:emoji-funny-circle-linear" width="20" class="text-[#F50087]"></iconify-icon>
+                  </span>
+                  <span class="font-display text-2xl text-[#0D1530]" data-group="">
+                    Rostro
+                  </span>
+                </span>
+                <iconify-icon icon="solar:alt-arrow-down-linear" width="20" class="acc-icon text-[#0D1530]/50"></iconify-icon>
+              </button>
+              <div class="acc-body">
+                <div class="px-6 pb-5">
+                  <div class="flex items-center justify-between py-2.5 border-b border-[#0D1530]/6 last:border-0">
+                    <span class="text-sm text-[#25252D]/75 font-light">
+                      Bozo
+                    </span>
+                    <span class="text-sm font-semibold text-[#0D1530]">
+                      $110
+                    </span>
+                  </div>
+                  <div class="flex items-center justify-between py-2.5 border-b border-[#0D1530]/6 last:border-0">
+                    <span class="text-sm text-[#25252D]/75 font-light">
+                      Barbilla
+                    </span>
+                    <span class="text-sm font-semibold text-[#0D1530]">
+                      $175
+                    </span>
+                  </div>
+                  <div class="flex items-center justify-between py-2.5 border-b border-[#0D1530]/6 last:border-0">
+                    <span class="text-sm text-[#25252D]/75 font-light">
+                      Cuello
+                    </span>
+                    <span class="text-sm font-semibold text-[#0D1530]">
+                      $225
+                    </span>
+                  </div>
+                  <div class="flex items-center justify-between py-2.5 border-b border-[#0D1530]/6 last:border-0">
+                    <span class="text-sm text-[#25252D]/75 font-light">
+                      Mentón
+                    </span>
+                    <span class="text-sm font-semibold text-[#0D1530]">
+                      $110
+                    </span>
+                  </div>
+                  <div class="flex items-center justify-between py-2.5 border-b border-[#0D1530]/6 last:border-0">
+                    <span class="text-sm text-[#25252D]/75 font-light">
+                      Patillas
+                    </span>
+                    <span class="text-sm font-semibold text-[#0D1530]">
+                      $110
+                    </span>
+                  </div>
+                  <div class="flex items-center justify-between py-2.5 border-b border-[#0D1530]/6 last:border-0">
+                    <span class="text-sm text-[#25252D]/75 font-light">
+                      Full Face
+                    </span>
+                    <span class="text-sm font-semibold text-[#0D1530]">
+                      $335
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="bg-white rounded-[1.5rem] border border-[#0D1530]/8 overflow-hidden">
+              <button class="acc-trigger w-full flex items-center justify-between px-6 py-5 text-left" aria-expanded="false">
+                <span class="flex items-center gap-3">
+                  <span class="w-10 h-10 rounded-full bg-[#FFF8F2] flex items-center justify-center">
+                    <iconify-icon icon="solar:user-rounded-linear" width="20" class="text-[#F50087]"></iconify-icon>
+                  </span>
+                  <span class="font-display text-2xl text-[#0D1530]" data-group="">
+                    Torso
+                  </span>
+                </span>
+                <iconify-icon icon="solar:alt-arrow-down-linear" width="20" class="acc-icon text-[#0D1530]/50"></iconify-icon>
+              </button>
+              <div class="acc-body">
+                <div class="px-6 pb-5">
+                  <div class="flex items-center justify-between py-2.5 border-b border-[#0D1530]/6 last:border-0">
+                    <span class="text-sm text-[#25252D]/75 font-light">
+                      Pecho
+                    </span>
+                    <span class="text-sm font-semibold text-[#0D1530]">
+                      $250
+                    </span>
+                  </div>
+                  <div class="flex items-center justify-between py-2.5 border-b border-[#0D1530]/6 last:border-0">
+                    <span class="text-sm text-[#25252D]/75 font-light">
+                      Abdomen
+                    </span>
+                    <span class="text-sm font-semibold text-[#0D1530]">
+                      $325
+                    </span>
+                  </div>
+                  <div class="flex items-center justify-between py-2.5 border-b border-[#0D1530]/6 last:border-0">
+                    <span class="text-sm text-[#25252D]/75 font-light">
+                      Axilas
+                    </span>
+                    <span class="text-sm font-semibold text-[#0D1530]">
+                      $175
+                    </span>
+                  </div>
+                  <div class="flex items-center justify-between py-2.5 border-b border-[#0D1530]/6 last:border-0">
+                    <span class="text-sm text-[#25252D]/75 font-light">
+                      Línea del ombligo
+                    </span>
+                    <span class="text-sm font-semibold text-[#0D1530]">
+                      $150
+                    </span>
+                  </div>
+                  <div class="flex items-center justify-between py-2.5 border-b border-[#0D1530]/6 last:border-0">
+                    <span class="text-sm text-[#25252D]/75 font-light">
+                      Espalda
+                    </span>
+                    <span class="text-sm font-semibold text-[#0D1530]">
+                      $489
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="bg-white rounded-[1.5rem] border border-[#0D1530]/8 overflow-hidden">
+              <button class="acc-trigger w-full flex items-center justify-between px-6 py-5 text-left" aria-expanded="false">
+                <span class="flex items-center gap-3">
+                  <span class="w-10 h-10 rounded-full bg-[#FFF8F2] flex items-center justify-center">
+                    <iconify-icon icon="solar:hand-stars-linear" width="20" class="text-[#F50087]"></iconify-icon>
+                  </span>
+                  <span class="font-display text-2xl text-[#0D1530]" data-group="">
+                    Brazos
+                  </span>
+                </span>
+                <iconify-icon icon="solar:alt-arrow-down-linear" width="20" class="acc-icon text-[#0D1530]/50"></iconify-icon>
+              </button>
+              <div class="acc-body">
+                <div class="px-6 pb-5">
+                  <div class="flex items-center justify-between py-2.5 border-b border-[#0D1530]/6 last:border-0">
+                    <span class="text-sm text-[#25252D]/75 font-light">
+                      Medio brazo
+                    </span>
+                    <span class="text-sm font-semibold text-[#0D1530]">
+                      $325
+                    </span>
+                  </div>
+                  <div class="flex items-center justify-between py-2.5 border-b border-[#0D1530]/6 last:border-0">
+                    <span class="text-sm text-[#25252D]/75 font-light">
+                      Brazo completo
+                    </span>
+                    <span class="text-sm font-semibold text-[#0D1530]">
+                      $475
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="bg-white rounded-[1.5rem] border border-[#0D1530]/8 overflow-hidden">
+              <button class="acc-trigger w-full flex items-center justify-between px-6 py-5 text-left" aria-expanded="false">
+                <span class="flex items-center gap-3">
+                  <span class="w-10 h-10 rounded-full bg-[#FFF8F2] flex items-center justify-center">
+                    <iconify-icon icon="solar:heart-shine-linear" width="20" class="text-[#F50087]"></iconify-icon>
+                  </span>
+                  <span class="font-display text-2xl text-[#0D1530]" data-group="">
+                    Zona íntima
+                  </span>
+                </span>
+                <iconify-icon icon="solar:alt-arrow-down-linear" width="20" class="acc-icon text-[#0D1530]/50"></iconify-icon>
+              </button>
+              <div class="acc-body">
+                <div class="px-6 pb-5">
+                  <div class="flex items-center justify-between py-2.5 border-b border-[#0D1530]/6 last:border-0">
+                    <span class="text-sm text-[#25252D]/75 font-light">
+                      Bikini
+                    </span>
+                    <span class="text-sm font-semibold text-[#0D1530]">
+                      $250
+                    </span>
+                  </div>
+                  <div class="flex items-center justify-between py-2.5 border-b border-[#0D1530]/6 last:border-0">
+                    <span class="text-sm text-[#25252D]/75 font-light">
+                      Brazilian
+                    </span>
+                    <span class="text-sm font-semibold text-[#0D1530]">
+                      $349
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="bg-white rounded-[1.5rem] border border-[#0D1530]/8 overflow-hidden">
+              <button class="acc-trigger w-full flex items-center justify-between px-6 py-5 text-left" aria-expanded="false">
+                <span class="flex items-center gap-3">
+                  <span class="w-10 h-10 rounded-full bg-[#FFF8F2] flex items-center justify-center">
+                    <iconify-icon icon="solar:walking-linear" width="20" class="text-[#F50087]"></iconify-icon>
+                  </span>
+                  <span class="font-display text-2xl text-[#0D1530]" data-group="">
+                    Piernas
+                  </span>
+                </span>
+                <iconify-icon icon="solar:alt-arrow-down-linear" width="20" class="acc-icon text-[#0D1530]/50"></iconify-icon>
+              </button>
+              <div class="acc-body">
+                <div class="px-6 pb-5">
+                  <div class="flex items-center justify-between py-2.5 border-b border-[#0D1530]/6 last:border-0">
+                    <span class="text-sm text-[#25252D]/75 font-light">
+                      Muslos
+                    </span>
+                    <span class="text-sm font-semibold text-[#0D1530]">
+                      $445
+                    </span>
+                  </div>
+                  <div class="flex items-center justify-between py-2.5 border-b border-[#0D1530]/6 last:border-0">
+                    <span class="text-sm text-[#25252D]/75 font-light">
+                      Media pierna
+                    </span>
+                    <span class="text-sm font-semibold text-[#0D1530]">
+                      $445
+                    </span>
+                  </div>
+                  <div class="flex items-center justify-between py-2.5 border-b border-[#0D1530]/6 last:border-0">
+                    <span class="text-sm text-[#25252D]/75 font-light">
+                      Pierna completa
+                    </span>
+                    <span class="text-sm font-semibold text-[#0D1530]">
+                      $579
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="bg-white rounded-[1.5rem] border border-[#0D1530]/8 overflow-hidden">
+              <button class="acc-trigger w-full flex items-center justify-between px-6 py-5 text-left" aria-expanded="false">
+                <span class="flex items-center gap-3">
+                  <span class="w-10 h-10 rounded-full bg-[#FFF8F2] flex items-center justify-center">
+                    <iconify-icon icon="solar:heart-linear" width="20" class="text-[#F50087]"></iconify-icon>
+                  </span>
+                  <span class="font-display text-2xl text-[#0D1530]" data-group="">
+                    Glúteos
+                  </span>
+                </span>
+                <iconify-icon icon="solar:alt-arrow-down-linear" width="20" class="acc-icon text-[#0D1530]/50"></iconify-icon>
+              </button>
+              <div class="acc-body">
+                <div class="px-6 pb-5">
+                  <div class="flex items-center justify-between py-2.5 border-b border-[#0D1530]/6 last:border-0">
+                    <span class="text-sm text-[#25252D]/75 font-light">
+                      Glúteos
+                    </span>
+                    <span class="text-sm font-semibold text-[#0D1530]">
+                      $389
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="mt-10 text-center reveal">
+            <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20L%C3%A1ser%20diodo.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="btn-primary js-wa-laser">
+              <iconify-icon icon="solar:chat-round-dots-linear" width="18"></iconify-icon>
+              <span data-es="Consultar disponibilidad de láser" data-en="Check laser availability">Consultar disponibilidad de láser</span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- ════════ DEPILACIÓN CON CERA ════════ -->
+      <section id="cera" class="py-20 px-5 md:px-10 scroll-mt-72 md:scroll-mt-48 cv-auto">
+        <div class="max-w-[1240px] mx-auto">
+          <div class="mb-12 reveal">
+            <span class="text-[11px] tracking-[0.25em] font-semibold text-[#F50087] flex items-center gap-2">
+              <iconify-icon icon="solar:leaf-linear" width="16" class="text-[#F5CE68]"></iconify-icon>
+              <span data-es="DEPILACIÓN PROFESIONAL" data-en="PROFESSIONAL WAXING">DEPILACIÓN PROFESIONAL</span>
+            </span>
+            <h2 class="font-display section-title font-medium text-[#0D1530] mt-3" data-es="Depilación con cera" data-en="Waxing">Depilación con cera</h2>
+            <div class="gold-line w-40 mt-5"></div>
+          </div>
+          <div class="mb-8 rounded-[1.5rem] border border-[#FFD6E3]/60 overflow-hidden h-48 md:h-64 reveal shadow-sm">
+            <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/26f49058-b18a-445e-8d91-21e122fb2ebb_3840w.png" alt="Professional Waxing" loading="lazy" class="w-full h-full object-cover">
+          </div>
+          <div id="wax-rows" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div class="card-hover liquid-glass rounded-[1.25rem] overflow-hidden border border-[#FFD6E3]/40">
+              <div class="relative w-full pt-[56%] bg-[#FFF8F2]">
+                <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/577f6a5a-3fef-415c-9fe9-c21665377279_3840w.png" alt="Bozo" loading="lazy" class="absolute inset-0 w-full h-full object-cover">
+              </div>
+              <div class="px-5 py-4 flex items-center justify-between gap-3">
+                <div class="flex items-center gap-3 min-w-0">
+                  <span class="text-sm font-medium text-[#0D1530] truncate" data-wax="">
+                    Bozo
+                  </span>
+                </div>
+                <span class="font-display text-xl font-medium text-[#F50087] shrink-0">
+                  $7
+                </span>
+              </div>
+            </div>
+            <div class="card-hover liquid-glass rounded-[1.25rem] overflow-hidden border border-[#FFD6E3]/40">
+              <div class="relative w-full pt-[56%] bg-[#FFF8F2]">
+                <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/a809c511-296f-4338-b12d-f604e6dc4ff8_3840w.png" alt="Barbilla" loading="lazy" class="absolute inset-0 w-full h-full object-cover">
+              </div>
+              <div class="px-5 py-4 flex items-center justify-between gap-3">
+                <div class="flex items-center gap-3 min-w-0">
+                  <span class="text-sm font-medium text-[#0D1530] truncate" data-wax="">
+                    Barbilla
+                  </span>
+                </div>
+                <span class="font-display text-xl font-medium text-[#F50087] shrink-0">
+                  $8
+                </span>
+              </div>
+            </div>
+            <div class="card-hover liquid-glass rounded-[1.25rem] overflow-hidden border border-[#FFD6E3]/40">
+              <div class="relative w-full pt-[56%] bg-[#FFF8F2]">
+                <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/465583cd-a597-4d9d-bbc8-208bd4fb92af_3840w.png" alt="Cejas" loading="lazy" class="absolute inset-0 w-full h-full object-cover">
+              </div>
+              <div class="px-5 py-4 flex items-center justify-between gap-3">
+                <div class="flex items-center gap-3 min-w-0">
+                  <span class="text-sm font-medium text-[#0D1530] truncate" data-wax="">
+                    Cejas
+                  </span>
+                </div>
+                <span class="font-display text-xl font-medium text-[#F50087] shrink-0">
+                  $15
+                </span>
+              </div>
+            </div>
+            <div class="card-hover liquid-glass rounded-[1.25rem] overflow-hidden border border-[#FFD6E3]/40">
+              <div class="relative w-full pt-[56%] bg-[#FFF8F2]">
+                <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/342189d6-d975-4c83-b024-36463fa66bbd_3840w.png" alt="Axilas" loading="lazy" class="absolute inset-0 w-full h-full object-cover">
+              </div>
+              <div class="px-5 py-4 flex items-center justify-between gap-3">
+                <div class="flex items-center gap-3 min-w-0">
+                  <span class="text-sm font-medium text-[#0D1530] truncate" data-wax="">
+                    Axilas
+                  </span>
+                </div>
+                <span class="font-display text-xl font-medium text-[#F50087] shrink-0">
+                  $25
+                </span>
+              </div>
+            </div>
+            <div class="card-hover liquid-glass rounded-[1.25rem] overflow-hidden border border-[#FFD6E3]/40">
+              <div class="relative w-full pt-[56%] bg-[#FFF8F2]">
+                <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/a101e550-ec1f-40c3-844a-bedabbb3354d_3840w.png" alt="Línea del ombligo" loading="lazy" class="absolute inset-0 w-full h-full object-cover">
+              </div>
+              <div class="px-5 py-4 flex items-center justify-between gap-3">
+                <div class="flex items-center gap-3 min-w-0">
+                  <span class="text-sm font-medium text-[#0D1530] truncate" data-wax="">
+                    Línea del ombligo
+                  </span>
+                </div>
+                <span class="font-display text-xl font-medium text-[#F50087] shrink-0">
+                  $15
+                </span>
+              </div>
+            </div>
+            <div class="card-hover liquid-glass rounded-[1.25rem] overflow-hidden border border-[#FFD6E3]/40">
+              <div class="relative w-full pt-[56%] bg-[#FFF8F2]">
+                <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/59e29adc-ae6a-4259-845d-0dceab52f201_3840w.png" alt="Bikini" loading="lazy" class="absolute inset-0 w-full h-full object-cover">
+              </div>
+              <div class="px-5 py-4 flex items-center justify-between gap-3">
+                <div class="flex items-center gap-3 min-w-0">
+                  <span class="text-sm font-medium text-[#0D1530] truncate" data-wax="">
+                    Bikini
+                  </span>
+                </div>
+                <span class="font-display text-xl font-medium text-[#F50087] shrink-0">
+                  $45
+                </span>
+              </div>
+            </div>
+            <div class="card-hover liquid-glass rounded-[1.25rem] overflow-hidden border border-[#FFD6E3]/40">
+              <div class="relative w-full pt-[56%] bg-[#FFF8F2]">
+                <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/6140432c-9dc4-48da-aec8-cad13fc5aad3_3840w.png" alt="Brazilian" loading="lazy" class="absolute inset-0 w-full h-full object-cover">
+              </div>
+              <div class="px-5 py-4 flex items-center justify-between gap-3">
+                <div class="flex items-center gap-3 min-w-0">
+                  <span class="text-sm font-medium text-[#0D1530] truncate" data-wax="">
+                    Brazilian
+                  </span>
+                </div>
+                <span class="font-display text-xl font-medium text-[#F50087] shrink-0">
+                  $75
+                </span>
+              </div>
+            </div>
+            <div class="card-hover liquid-glass rounded-[1.25rem] overflow-hidden border border-[#FFD6E3]/40">
+              <div class="relative w-full pt-[56%] bg-[#FFF8F2]">
+                <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/db76d388-1f17-4529-87c2-09d6c1518d59_3840w.png" alt="Medias piernas" loading="lazy" class="absolute inset-0 w-full h-full object-cover">
+              </div>
+              <div class="px-5 py-4 flex items-center justify-between gap-3">
+                <div class="flex items-center gap-3 min-w-0">
+                  <span class="text-sm font-medium text-[#0D1530] truncate" data-wax="">
+                    Medias piernas
+                  </span>
+                </div>
+                <span class="font-display text-xl font-medium text-[#F50087] shrink-0">
+                  $60
+                </span>
+              </div>
+            </div>
+            <div class="card-hover liquid-glass rounded-[1.25rem] overflow-hidden border border-[#FFD6E3]/40">
+              <div class="relative w-full pt-[56%] bg-[#FFF8F2]">
+                <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/40df4e88-ed10-4848-94db-a999ff98eb30_3840w.png" alt="Piernas completas" loading="lazy" class="absolute inset-0 w-full h-full object-cover">
+              </div>
+              <div class="px-5 py-4 flex items-center justify-between gap-3">
+                <div class="flex items-center gap-3 min-w-0">
+                  <span class="text-sm font-medium text-[#0D1530] truncate" data-wax="">
+                    Piernas completas
+                  </span>
+                </div>
+                <span class="font-display text-xl font-medium text-[#F50087] shrink-0">
+                  $95
+                </span>
+              </div>
+            </div>
+            <div class="card-hover liquid-glass rounded-[1.25rem] overflow-hidden border border-[#FFD6E3]/40">
+              <div class="relative w-full pt-[56%] bg-[#FFF8F2]">
+                <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/d912f150-7ebc-4a73-a06c-32ae721a62cf_3840w.png" alt="Glúteos" loading="lazy" class="absolute inset-0 w-full h-full object-cover">
+              </div>
+              <div class="px-5 py-4 flex items-center justify-between gap-3">
+                <div class="flex items-center gap-3 min-w-0">
+                  <span class="text-sm font-medium text-[#0D1530] truncate" data-wax="">
+                    Glúteos
+                  </span>
+                </div>
+                <span class="font-display text-xl font-medium text-[#F50087] shrink-0">
+                  $60
+                </span>
+              </div>
+            </div>
+            <div class="card-hover liquid-glass rounded-[1.25rem] overflow-hidden border border-[#FFD6E3]/40">
+              <div class="relative w-full pt-[56%] bg-[#FFF8F2]">
+                <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/751f14b3-72c8-4e5e-90da-bc07fe7fad98_3840w.png" alt="Espalda" loading="lazy" class="absolute inset-0 w-full h-full object-cover">
+              </div>
+              <div class="px-5 py-4 flex items-center justify-between gap-3">
+                <div class="flex items-center gap-3 min-w-0">
+                  <span class="text-sm font-medium text-[#0D1530] truncate" data-wax="">
+                    Espalda
+                  </span>
+                </div>
+                <span class="font-display text-xl font-medium text-[#F50087] shrink-0">
+                  $75
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="mt-10 text-center reveal">
+            <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Depilaci%C3%B3n%20con%20cera.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="btn-ghost js-wa-wax">
+              <iconify-icon icon="solar:chat-round-dots-linear" width="18"></iconify-icon>
+              <span data-es="Consultar depilación con cera" data-en="Ask about waxing" class="">Consultar depilación con cera</span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- ════════ FINAL CTA ════════ -->
+      <section class="py-24 px-5 md:px-10 cv-auto">
+        <div class="max-w-[1240px] mx-auto bg-[#0D1530] rounded-[2.5rem] px-8 md:px-16 py-20 relative overflow-hidden text-center">
+          <div class="absolute -top-10 -left-10 w-60 h-60 bg-[#F50087]/15 rounded-full blur-3xl pointer-events-none"></div>
+          <div class="absolute -bottom-10 -right-10 w-60 h-60 bg-[#F5CE68]/10 rounded-full blur-3xl pointer-events-none"></div>
+          <div class="relative reveal">
+            <h2 class="font-display section-title font-medium text-white mb-5" data-es="¿Lista para coordinar tu cita?" data-en="Ready to schedule your appointment?">¿Lista para coordinar tu cita?</h2>
+            <p class="text-white/70 font-light max-w-xl mx-auto mb-9" data-es="Comunícate con Princess Esthetics por WhatsApp para recibir orientación personalizada y confirmar tu espacio." data-en="Contact Princess Esthetics on WhatsApp for personalized guidance and to confirm your appointment.">Comunícate con Princess Esthetics por WhatsApp para recibir orientación personalizada y confirmar tu espacio.</p>
+            <div class="flex flex-wrap gap-3 justify-center">
+              <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20recibir%20informaci%C3%B3n%20sobre%20sus%20servicios%20y%20disponibilidad%20para%20una%20cita." target="_blank" rel="noopener" class="btn-primary js-wa">
+                <iconify-icon icon="solar:chat-round-dots-linear" width="18"></iconify-icon>
+                <span data-es="Consultar por WhatsApp" data-en="Ask on WhatsApp">Consultar por WhatsApp</span>
+              </a>
+              <a href="galeria.html" class="btn-ghost" style="background:rgba(255,255,255,0.1);color:#fff;border-color:rgba(255,255,255,0.2)">
+                <span data-es="Ver galería" data-en="View gallery">Ver galería</span>
+                <iconify-icon icon="solar:arrow-right-linear" width="18"></iconify-icon>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- ════════ FOOTER ════════ -->
+    <footer class="bg-[#0D1530] text-white pt-20 pb-24 md:pb-12 px-5 md:px-10">
+      <div class="max-w-[1240px] mx-auto grid grid-cols-1 md:grid-cols-4 gap-10 md:gap-8">
+        <div class="md:col-span-1 flex flex-col items-center md:items-start text-center md:text-left">
+          <a href="index.html" class="inline-block mb-2">
+            <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/096923e3-18d0-458b-b81b-5b1471885ec7_800w.png" alt="Princess Esthetics" class="md:h-40 w-auto h-32 object-contain mb-5 -translate-y-2 scale-100" style="object-fit:contain" width="160" height="48">
+          </a>
+          <p class="text-white/70 text-sm font-light leading-relaxed mb-6" data-es="Cuidado estético profesional con tecnología de vanguardia en Canóvanas." data-en="Professional aesthetic care with cutting-edge technology in Canóvanas.">Cuidado estético profesional con tecnología de vanguardia en Canóvanas.</p>
+          <div class="flex items-center gap-4">
+            <a href="https://www.instagram.com/princessesthetics_pr/" target="_blank" rel="noopener" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white hover:bg-[#F50087] transition-colors" aria-label="Instagram">
+              <iconify-icon icon="mdi:instagram" width="20" class=""></iconify-icon>
+            </a>
+            <a href="https://www.facebook.com/PrincessEstetics/" target="_blank" rel="noopener" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white hover:bg-[#F50087] transition-colors" aria-label="Facebook">
+              <iconify-icon icon="mdi:facebook" width="20"></iconify-icon>
+            </a>
+          </div>
+        </div>
+        <div class="flex flex-col items-center md:items-start text-center md:text-left">
+          <h3 class="font-display text-xl font-semibold text-white mb-5" data-es="Navegación" data-en="Navigation">Navegación</h3>
+          <div class="flex flex-col gap-3 text-white/70 text-sm font-light">
+            <a href="index.html" class="hover:text-[#F50087] transition-colors" data-es="Inicio" data-en="Home">Inicio</a>
+            <a href="index.html#nosotros" class="hover:text-[#F50087] transition-colors" data-es="Nosotros" data-en="About">Nosotros</a>
+            <a href="/servicio" class="hover:text-[#F50087] transition-colors" data-es="Servicios" data-en="Services">Servicios</a>
+            <a href="galeria.html" class="hover:text-[#F50087] transition-colors" data-es="Galería" data-en="Gallery">Galería</a>
+            <a href="index.html#testimonios" class="hover:text-[#F50087] transition-colors" data-es="Testimonios" data-en="Testimonials">Testimonios</a>
+            <a href="index.html#ubicacion" class="hover:text-[#F50087] transition-colors" data-es="Ubicación" data-en="Location">Ubicación</a>
+          </div>
+        </div>
+        <div class="flex flex-col items-center md:items-start text-center md:text-left">
+          <h3 class="font-display text-xl font-semibold text-white mb-5" data-es="Contacto" data-en="Contact">Contacto</h3>
+          <div class="flex flex-col gap-4 text-white/70 text-sm font-light items-center md:items-start">
+            <a href="https://wa.me/17876748261" target="_blank" rel="noopener" class="flex items-center md:items-start gap-3 hover:text-[#F50087] transition-colors">
+              <iconify-icon icon="solar:phone-linear" width="18" class="text-[#F50087] shrink-0 md:mt-0.5"></iconify-icon>
+              <span class="">(787) 674-8261</span>
+            </a>
+            <a href="mailto:princessestetics@yahoo.com" class="flex items-center md:items-start gap-3 hover:text-[#F50087] transition-colors">
+              <iconify-icon icon="solar:letter-linear" width="18" class="text-[#F50087] shrink-0 md:mt-0.5"></iconify-icon>
+              <span class="cursor-pointer" onclick="window.location.href='https://www.google.com/maps/place/Princess+Esthetics/@18.3771885,-65.9041439,17z/data=!3m1!4b1!4m6!3m5!1s0x8c036128621884cb:0x1801ff99fe5c029d!8m2!3d18.3771834!4d-65.901569!16s%2Fg%2F11p6f9cdhx?entry=ttu&amp;g_ep=EgoyMDI2MDcwNi4wIKXMDSoASAFQAw%3D%3D'" role="button">princessestetics@yahoo.com</span>
+            </a>
+            <a href="index.html#ubicacion" class="flex items-start gap-3 hover:text-[#F50087] transition-colors text-center md:text-left">
+              <iconify-icon icon="solar:map-point-linear" width="18" class="text-[#F50087] shrink-0 mt-0.5 hidden md:block"></iconify-icon>
+              <span data-es="Edificio Multiusos, segundo piso, oficina PB, 02 Cll Pepita Albandoz, Canóvanas, PR 00729" data-en="Multipurpose Building, second floor, PB office, 02 Pepita Albandoz St, Canóvanas, PR 00729" class="cursor-pointer" onclick="window.location.href='https://www.google.com/maps/place/Princess+Esthetics/@18.3771885,-65.9041439,17z/data=!3m1!4b1!4m6!3m5!1s0x8c036128621884cb:0x1801ff99fe5c029d!8m2!3d18.3771834!4d-65.901569!16s%2Fg%2F11p6f9cdhx?entry=ttu&amp;g_ep=EgoyMDI2MDcwNi4wIKXMDSoASAFQAw%3D%3D'" role="button">Edificio Multiusos, segundo piso, oficina PB, 02 Cll Pepita Albandoz, Canóvanas, PR 00729</span>
+            </a>
+          </div>
+        </div>
+        <div class="flex flex-col items-center md:items-start text-center md:text-left w-full max-w-[250px] mx-auto md:mx-0">
+          <h3 class="font-display text-xl font-semibold text-white mb-5" data-es="Horario" data-en="Hours">Horario</h3>
+          <div class="flex flex-col gap-3 text-white/70 text-sm font-light w-full">
+            <div class="flex justify-between border-b border-white/10 pb-2">
+              <span data-es="Martes - Sábado" data-en="Tuesday - Saturday">Martes - Sábado</span>
+              <span>9:00 AM - 5:00 PM</span>
+            </div>
+            <div class="flex justify-between border-b border-white/10 pb-2">
+              <span data-es="Domingo &amp; Lunes" data-en="Sunday &amp; Monday">Domingo &amp; Lunes</span>
+              <span data-es="Cerrado" data-en="Closed">Cerrado</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="max-w-[1240px] mx-auto border-t border-white/10 mt-12 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-white/50 text-xs font-light">
+        <div class="flex items-center gap-2">
+          <button class="lang-btn active text-white/70 hover:text-white transition-colors" data-lang="es">
+            ES
+          </button>
+          <span>|</span>
+          <button class="lang-btn text-white/70 hover:text-white transition-colors" data-lang="en">
+            EN
+          </button>
+        </div>
+        <div class="flex flex-col items-center md:items-end gap-1">
+          <span>
+            © 2024 Princess Esthetics.
+            <span data-es="Todos los derechos reservados." data-en="All rights reserved.">Todos los derechos reservados.</span>
+          </span>
+          <span>
+            Website by
+            <a href="https://scwebstudios.com" target="_blank" rel="noopener" class="text-white hover:text-[#F50087] transition-colors underline underline-offset-2">
+              SC Web Studios
+            </a>
+          </span>
+        </div>
+      </div>
+    </footer>
+
+    <!-- ════════ FLOATING MOBILE ACTION BAR ════════ -->
+    <div class="md:hidden fixed bottom-0 left-0 right-0 z-40 liquid-glass flex gap-3 px-4 pt-3" style="padding-bottom:calc(0.75rem + env(safe-area-inset-bottom))">
+      <a href="tel:+17876748261" class="flex-1 flex items-center justify-center gap-2 bg-[#0D1530] text-white rounded-full py-3 font-medium text-sm min-h-[44px]">
+        <iconify-icon icon="solar:phone-calling-linear" width="18"></iconify-icon>
+        <span data-es="Llamar" data-en="Call">Llamar</span>
+      </a>
+      <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20recibir%20informaci%C3%B3n%20sobre%20sus%20servicios%20y%20disponibilidad%20para%20una%20cita." target="_blank" rel="noopener" class="flex-1 flex items-center justify-center gap-2 bg-[#1FAE54] text-white rounded-full py-3 font-medium text-sm min-h-[44px] js-wa">
+        <iconify-icon icon="solar:chat-round-dots-linear" width="18"></iconify-icon>
+        WhatsApp
+      </a>
+    </div>
+
+    <script>
+      /* ===== SERVICE DATA (kept for WA + potential future use; no DOM rendering) ===== */
+      var WA_NUM='17876748261';
+      var SERVICES={
+        faciales:[
+          {es:'Limpieza Facial Express',en:'Express Facial Cleansing',price:'$49',icon:'solar:magic-stick-3-linear',des:'Limpieza facial rápida que refresca y revitaliza tu piel.',den:'A quick facial cleansing that refreshes and revitalizes your skin.',img:'https://images.unsplash.com/photo-1616394584738-fc6e612e71c9?w=400&q=80'},
+          {es:'Limpieza Facial Profunda',en:'Deep Facial Cleansing',price:'$65',icon:'solar:water-drops-linear',des:'Limpieza profunda para una piel más limpia y luminosa.',den:'Deep cleansing for cleaner, more radiant-looking skin.',img:'https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=400&q=80'},
+          {es:'Booty Facial',en:'Booty Facial',price:'$75',icon:'solar:heart-linear',des:'Tratamiento de limpieza e hidratación para la piel del área glútea.',den:'Cleansing and hydrating treatment for the skin of the glute area.',img:'https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=400&q=80'},
+          {es:'Espalda Facial',en:'Back Facial',price:'$85',icon:'solar:user-rounded-linear',des:'Limpieza e hidratación profesional para la piel de la espalda.',den:'Professional cleansing and hydration for the skin of the back.',img:'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=400&q=80'},
+          {es:'Facial Hidratante',en:'Hydrating Facial',price:'$55',icon:'solar:cloud-linear',des:'Aporta hidratación y suavidad para una piel más confortable.',den:'Provides hydration and softness for more comfortable-feeling skin.',img:'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=400&q=80'},
+          {es:'Facial Antiacné',en:'Acne-Care Facial',price:'$75',icon:'solar:shield-check-linear',des:'Cuidado facial enfocado en pieles con tendencia acneica.',den:'Facial care focused on acne-prone skin types.',img:'https://images.unsplash.com/photo-1527799820374-dcf8d9d4a388?w=400&q=80'},
+          {es:'Facial Antiedad',en:'Age-Defying Facial',price:'$75',icon:'solar:star-linear',des:'Tratamiento que ayuda a mejorar la apariencia y firmeza de la piel.',den:'A treatment that helps improve the appearance and firmness of the skin.',img:'https://images.unsplash.com/photo-1520473378652-85d9c4aee6cf?w=400&q=80'},
+          {es:'Facial Despigmentante',en:'Brightening Facial',price:'$75',icon:'solar:sun-linear',des:'Cuidado enfocado en mejorar la luminosidad y uniformidad del tono.',den:'Care focused on improving radiance and a more even-looking tone.',img:'https://images.unsplash.com/photo-1512290923902-8a9f81dc236c?w=400&q=80'},
+          {es:'Dermaplaning',en:'Dermaplaning',price:'$75',icon:'solar:scissors-linear',des:'Exfoliación que deja la piel suave y con apariencia renovada.',den:'Exfoliation that leaves the skin smooth with a renewed appearance.',img:'https://images.unsplash.com/photo-1620916566393-e19f75a9b7df?w=400&q=80'},
+          {es:'Oxigenoterapia Facial',en:'Oxygen Facial Therapy',price:'$75',icon:'solar:wind-linear',des:'Tratamiento que aporta frescura y vitalidad al rostro.',den:'A treatment that brings freshness and vitality to the face.',img:'https://images.unsplash.com/photo-1600861194942-f883de0dfe96?w=400&q=80'}
+        ],
+        tecnologia:[
+          {es:'Dermapen',en:'Dermapen',price:'$75',icon:'solar:pen-new-square-linear',des:'Tratamiento facial con tecnología de microagujas.',den:'Facial treatment using microneedling technology.',img:'https://images.unsplash.com/photo-1582095133179-bfd08e2fc6b3?w=400&q=80'},
+          {es:'HIFU Facial',en:'HIFU Facial',price:'$95',icon:'solar:soundwave-linear',des:'Tecnología de ultrasonido enfocada para el cuidado facial.',den:'Focused ultrasound technology for facial care.',img:'https://images.unsplash.com/photo-1580281658628-0f93b8f2d2d6?w=400&q=80'},
+          {es:'Morpheus8',en:'Morpheus8',price:'$195',icon:'solar:cpu-bolt-linear',des:'Tecnología avanzada combinada para el cuidado de la piel.',den:'Advanced combined technology for skin care.',img:'https://images.unsplash.com/photo-1612810436541-336d2b2d12f4?w=400&q=80'},
+          {es:'Microdermoabrasión',en:'Microdermabrasion',price:'$55',icon:'solar:layers-minimalistic-linear',des:'Exfoliación mecánica que renueva la superficie de la piel.',den:'Mechanical exfoliation that renews the skin surface.',img:'https://images.unsplash.com/photo-1600334129128-685c5582fd35?w=400&q=80'},
+          {es:'Radiofrecuencia Facial',en:'Facial Radiofrequency',price:'$55',icon:'solar:radio-linear',des:'Tecnología de radiofrecuencia para el cuidado facial.',den:'Radiofrequency technology for facial care.',img:'https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?w=400&q=80'},
+          {es:'Terapia LED',en:'LED Light Therapy',price:'$55',icon:'solar:lightbulb-linear',des:'Sesión de luz LED como complemento del cuidado facial.',den:'LED light session as a complement to facial care.',img:'https://images.unsplash.com/photo-1582719478185-2ab0f33f1d68?w=400&q=80'},
+          {es:'Crystal Carboxy',en:'Crystal Carboxy',price:'$85',icon:'solar:diamond-linear',des:'Tratamiento facial con tecnología de carboxiterapia.',den:'Facial treatment using carboxytherapy technology.',img:'https://images.unsplash.com/photo-1616394584738-fc6e612e71c9?w=400&q=80'},
+          {es:'Esperma de Salmón',en:'Salmon-Derived Skin Treatment',price:'$85',icon:'solar:dna-linear',des:'Tratamiento facial avanzado para el cuidado de la piel.',den:'Advanced facial treatment for skin care.',img:'https://images.unsplash.com/photo-1612531385446-f7e23d0a55bc?w=400&q=80'}
+        ],
+        corporales:[
+          {es:'Maderoterapia',en:'Wood Therapy',price:'$80',sub:[['Cuerpo completo','Full body','$80'],['Una zona','One area','$50']],icon:'solar:magic-stick-linear',des:'Masaje corporal con instrumentos de madera.',den:'Body massage using wooden instruments.',img:'https://images.unsplash.com/photo-1600334129128-685c5582fd35?w=400&q=80'},
+          {es:'Drenaje Linfático',en:'Lymphatic Drainage Massage',price:'$75',icon:'solar:hand-heart-linear',des:'Masaje suave enfocado en el bienestar corporal.',den:'Gentle massage focused on body wellness.',img:'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=400&q=80'},
+          {es:'Presoterapia',en:'Pressotherapy',price:'$50',icon:'solar:wind-linear',des:'Sesión de compresión para una sensación de ligereza.',den:'Compression session for a feeling of lightness.',img:'https://images.unsplash.com/photo-1599901860904-17e6ed7083a0?w=400&q=80'},
+          {es:'EMSCULPT',en:'EMSCULPT',price:'$50',icon:'solar:dumbbell-linear',des:'Sesión corporal con tecnología de estimulación muscular.',den:'Body session using muscle-stimulation technology.',img:'https://images.unsplash.com/photo-1518611012118-f0c5d9cfa1a9?w=400&q=80'},
+          {es:'Manta Térmica',en:'Thermal Blanket Session',price:'$50',icon:'solar:fire-linear',des:'Sesión de calor como parte del cuidado corporal.',den:'Heat session as part of body care.',img:'https://images.unsplash.com/photo-1611077544209-3a377f77f6ee?w=400&q=80'},
+          {es:'Detox Iónico',en:'Ionic Foot Session',price:'$30',icon:'solar:waterdrops-linear',des:'Sesión relajante de pies como complemento de bienestar.',den:'Relaxing foot session as a wellness complement.',img:'https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=400&q=80'},
+          {es:'Reducción de Medidas',en:'Body Contouring Treatment',price:'$80',sub:[['Cuerpo completo','Full body','$80'],['Una zona','One area','$50']],icon:'solar:ruler-linear',des:'Tratamiento corporal enfocado en moldear la figura.',den:'Body treatment focused on shaping the figure.',img:'https://images.unsplash.com/photo-1599058917212-d750089bc07c?w=400&q=80'},
+          {es:'Reafirmación Corporal',en:'Body Firming Treatment',price:'$80',sub:[['Cuerpo completo','Full body','$80'],['Una zona','One area','$50']],icon:'solar:shield-up-linear',des:'Tratamiento que ayuda a mejorar la apariencia de firmeza.',den:'A treatment that helps improve the appearance of firmness.',img:'https://images.unsplash.com/photo-1519823551278-64ac92734fb1?w=400&q=80'},
+          {es:'Exfoliación Corporal',en:'Body Exfoliation',price:'$75',icon:'solar:stars-minimalistic-linear',des:'Exfoliación que deja la piel suave y renovada.',den:'Exfoliation that leaves the skin smooth and renewed.',img:'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=400&q=80'}
+        ]
+      };
+      var LASER=[
+        {es:'Rostro',en:'Face',icon:'solar:emoji-funny-circle-linear',items:[['Bozo','Upper Lip','$110'],['Barbilla','Chin','$175'],['Cuello','Neck','$225'],['Mentón','Lower Chin','$110'],['Patillas','Sideburns','$110'],['Full Face','Full Face','$335']],img:'https://images.unsplash.com/photo-1534067783941-51c9c23ecefd?w=800&q=80'},
+        {es:'Torso',en:'Torso',icon:'solar:user-rounded-linear',items:[['Pecho','Chest','$250'],['Abdomen','Abdomen','$325'],['Axilas','Underarms','$175'],['Línea del ombligo','Stomach Line','$150'],['Espalda','Back','$489']],img:'https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=800&q=80'},
+        {es:'Brazos',en:'Arms',icon:'solar:hand-stars-linear',items:[['Medio brazo','Half Arms','$325'],['Brazo completo','Full Arms','$475']],img:'https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=800&q=80'},
+        {es:'Zona íntima',en:'Intimate Area',icon:'solar:heart-shine-linear',items:[['Bikini','Bikini','$250'],['Brazilian','Brazilian','$349']],img:'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=800&q=80'},
+        {es:'Piernas',en:'Legs',icon:'solar:walking-linear',items:[['Muslos','Thighs','$445'],['Media pierna','Half Legs','$445'],['Pierna completa','Full Legs','$579']],img:'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=800&q=80'},
+        {es:'Glúteos',en:'Glutes',icon:'solar:heart-linear',items:[['Glúteos','Glutes','$389']],img:'https://images.unsplash.com/photo-1520473378652-85d9c4aee6cf?w=800&q=80'}
+      ];
+      var WAX=[
+        {es:'Bozo',en:'Upper Lip',price:'$7',img:'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=800&q=80'},
+        {es:'Barbilla',en:'Chin',price:'$8',img:'https://images.unsplash.com/photo-1512290923902-8a9f81dc236c?w=800&q=80'},
+        {es:'Cejas',en:'Eyebrows',price:'$15',img:'https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=800&q=80'},
+        {es:'Axilas',en:'Underarms',price:'$25',img:'https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=800&q=80'},
+        {es:'Línea del ombligo',en:'Stomach Line',price:'$15',img:'https://images.unsplash.com/photo-1611077544209-3a377f77f6ee?w=800&q=80'},
+        {es:'Bikini',en:'Bikini',price:'$45',img:'https://images.unsplash.com/photo-1599058917212-d750089bc07c?w=800&q=80'},
+        {es:'Brazilian',en:'Brazilian',price:'$75',img:'https://images.unsplash.com/photo-1600861194942-f883de0dfe96?w=800&q=80'},
+        {es:'Medias piernas',en:'Half Legs',price:'$60',img:'https://images.unsplash.com/photo-1580281658628-0f93b8f2d2d6?w=800&q=80'},
+        {es:'Piernas completas',en:'Full Legs',price:'$95',img:'https://images.unsplash.com/photo-1582095133179-bfd08e2fc6b3?w=800&q=80'},
+        {es:'Glúteos',en:'Glutes',price:'$60',img:'https://images.unsplash.com/photo-1612810436541-336d2b2d12f4?w=800&q=80'},
+        {es:'Espalda',en:'Back',price:'$75',img:'https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?w=800&q=80'}
+      ];
+
+      /* ===== Language state ===== */
+      var KEY='princessLanguage';
+      var currentLang='es';
+      try{currentLang=localStorage.getItem(KEY)||'es';}catch(e){}
+
+      function waLink(serviceName){
+        var base='https://wa.me/'+WA_NUM+'?text=';
+        var msg=currentLang==='es'
+          ? 'Hola, me interesa el servicio de '+serviceName+'. ¿Podrían darme información y disponibilidad para una cita?'
+          : 'Hello, I am interested in the '+serviceName+' service. Could you give me information and appointment availability?';
+        return base+encodeURIComponent(msg);
+      }
+
+      function bindAccordions(){
+        document.querySelectorAll('.acc-trigger').forEach(function(t){
+          if(t.__accBound) return;
+          t.__accBound=true;
+          t.addEventListener('click',function(){
+            var body=t.nextElementSibling;
+            var open=body.classList.toggle('open');
+            t.classList.toggle('open',open);
+            t.setAttribute('aria-expanded',open?'true':'false');
+          });
+        });
+      }
+
+      /* ===== Apply language (NO re-render of cards) ===== */
+      var WA_DEFAULT={es:'https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20recibir%20informaci%C3%B3n%20sobre%20sus%20servicios%20y%20disponibilidad%20para%20una%20cita.',en:'https://wa.me/17876748261?text=Hello%2C%20I%20would%20like%20information%20about%20your%20services%20and%20appointment%20availability.'};
+      function applyLang(lang){
+        currentLang=lang;
+        document.documentElement.lang=lang;
+        document.querySelectorAll('[data-es]').forEach(function(el){
+          var t=el.getAttribute('data-'+lang);
+          if(t!==null) el.textContent=t;
+        });
+        document.querySelectorAll('.js-wa').forEach(function(a){a.setAttribute('href',WA_DEFAULT[lang]);});
+        document.querySelectorAll('.js-wa-laser').forEach(function(a){a.setAttribute('href',waLink(lang==='es'?'Láser diodo':'Diode Laser'));});
+        document.querySelectorAll('.js-wa-wax').forEach(function(a){a.setAttribute('href',waLink(lang==='es'?'Depilación con cera':'Waxing'));});
+        document.querySelectorAll('.lang-btn').forEach(function(b){b.classList.toggle('active',b.getAttribute('data-lang')===lang);});
+        try{localStorage.setItem(KEY,lang);}catch(e){}
+        bindAccordions();
+        revealAll();
+      }
+
+      document.querySelectorAll('.lang-btn').forEach(function(b){
+        b.addEventListener('click',function(){applyLang(b.getAttribute('data-lang'));});
+      });
+
+      /* ===== Mobile Menu ===== */
+      (function(){
+        var toggle=document.getElementById('menu-toggle');
+        var menu=document.getElementById('mobile-menu');
+        var icon=document.getElementById('menu-icon');
+        function close(){menu.classList.remove('open');toggle.setAttribute('aria-expanded','false');icon.setAttribute('icon','solar:hamburger-menu-linear');document.body.style.overflow='';}
+        toggle.addEventListener('click',function(){
+          var open=menu.classList.toggle('open');
+          toggle.setAttribute('aria-expanded',open?'true':'false');
+          icon.setAttribute('icon',open?'solar:close-circle-linear':'solar:hamburger-menu-linear');
+          document.body.style.overflow=open?'hidden':'';
+        });
+        document.querySelectorAll('.js-menu-link').forEach(function(l){l.addEventListener('click',close);});
+      })();
+
+      /* ===== Nav scroll effect ===== */
+      (function(){
+        var nav=document.getElementById('main-nav');
+        window.addEventListener('scroll',function(){
+          if(window.scrollY>30){nav.style.background='rgba(255,255,255,0.9)';nav.style.boxShadow='0 10px 40px rgba(13,21,48,0.12)';}
+          else{nav.style.background='';nav.style.boxShadow='';}
+        });
+      })();
+
+      /* ===== Reveal ===== */
+      function revealAll(){
+        var obs=new IntersectionObserver(function(entries){
+          entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});
+        },{threshold:0.1});
+        document.querySelectorAll('.reveal').forEach(function(el){obs.observe(el);});
+      }
+
+      /* ===== Active category on scroll ===== */
+      (function(){
+        var pills=document.querySelectorAll('.cat-pill');
+        var sections=['faciales','tecnologia','corporales','laser','cera'].map(function(id){return document.getElementById(id);});
+        function update(){
+          var pos=window.scrollY+200;
+          var current='faciales';
+          sections.forEach(function(s){if(s&&s.offsetTop<=pos)current=s.id;});
+          pills.forEach(function(p){p.classList.toggle('active',p.getAttribute('data-cat')===current);});
+        }
+        window.addEventListener('scroll',update);
+        update();
+      })();
+
+      /* ===== Init ===== */
+      bindAccordions();
+      applyLang(currentLang);
+    </script>
+  
+</body></html>

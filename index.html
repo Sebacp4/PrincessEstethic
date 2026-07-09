@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth"><head><script id="aura-preview-performance-controller">
+(function() {
+if (window.__auraPreviewPerformanceController) return;
+const nativeRequestAnimationFrame = window.requestAnimationFrame
+? window.requestAnimationFrame.bind(window)
+: function(callback) { return window.setTimeout(function() { callback(Date.now()); }, 16); };
+const nativeCancelAnimationFrame = window.cancelAnimationFrame
+? window.cancelAnimationFrame.bind(window)
+: window.clearTimeout.bind(window);
+const nativeSetInterval = window.setInterval.bind(window);
+let paused = false;
+let nextFrameId = 1;
+const frameRecords = new Map();
+const pausedFrameCallbacks = new Map();
+const style = document.createElement('style');
+style.id = 'aura-preview-performance-style';
+style.textContent = [
+'html[data-aura-preview-paused="true"] *,',
+'html[data-aura-preview-paused="true"] *::before,',
+'html[data-aura-preview-paused="true"] *::after {',
+'  animation-play-state: paused !important;',
+'  transition-duration: 0s !important;',
+'  scroll-behavior: auto !important;',
+'}'
+].join('\n');
+document.head.appendChild(style);
+window.requestAnimationFrame = function(callback) {
+const frameId = nextFrameId++;
+if (paused) {
+pausedFrameCallbacks.set(frameId, callback);
+frameRecords.set(frameId, { paused: true });
+return frameId;
+}
+const nativeFrameId = nativeRequestAnimationFrame(function(timestamp) {
+frameRecords.delete(frameId);
+callback(timestamp);
+});
+frameRecords.set(frameId, { nativeFrameId: nativeFrameId });
+return frameId;
+};
+window.cancelAnimationFrame = function(frameId) {
+const record = frameRecords.get(frameId);
+pausedFrameCallbacks.delete(frameId);
+if (record && typeof record.nativeFrameId !== 'undefined') {
+nativeCancelAnimationFrame(record.nativeFrameId);
+}
+frameRecords.delete(frameId);
+};
+window.setInterval = function(callback, delay) {
+const args = Array.prototype.slice.call(arguments, 2);
+return nativeSetInterval(function() {
+if (paused) return;
+callback.apply(this, args);
+}, delay);
+};
+const flushPausedFrames = function() {
+const callbacks = Array.from(pausedFrameCallbacks.entries());
+pausedFrameCallbacks.clear();
+callbacks.forEach(function(entry) {
+const frameId = entry[0];
+const callback = entry[1];
+const nativeFrameId = nativeRequestAnimationFrame(function(timestamp) {
+frameRecords.delete(frameId);
+callback(timestamp);
+});
+frameRecords.set(frameId, { nativeFrameId: nativeFrameId });
+});
+};
+const setPaused = function(nextPaused) {
+const shouldPause = Boolean(nextPaused);
+if (paused === shouldPause) return;
+paused = shouldPause;
+document.documentElement.toggleAttribute('data-aura-preview-paused', paused);
+if (!paused) {
+flushPausedFrames();
+}
+};
+window.__auraPreviewPerformanceController = {
+setPaused: setPaused,
+get paused() {
+return paused;
+}
+};
+window.addEventListener('message', function(event) {
+if (event.source !== window.parent) return;
+if (!event.data || event.data.type !== 'aura-preview-performance-mode') return;
+setPaused(event.data.paused);
+});
+})();
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Princess Esthetics | Tratamientos Estéticos en Canóvanas</title>
+<meta name="description" content="Descubre tratamientos faciales, corporales, láser diodo, depilación con cera y estética avanzada en Princess Esthetics, Canóvanas, Puerto Rico.">
+<link rel="canonical" href="https://princessesthetics.com/home">
+<meta name="theme-color" content="#0D1530">
+<!-- Favicon placeholder -->
+<link rel="icon" href="/favicon.ico">
+<!-- Open Graph -->
+<meta property="og:title" content="Princess Esthetics | Tratamientos Estéticos en Canóvanas">
+<meta property="og:description" content="Tratamientos faciales, corporales, láser diodo y estética avanzada en Canóvanas, Puerto Rico.">
+<meta property="og:image" content="/og-image.jpg">
+<meta property="og:type" content="website">
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Princess Esthetics | Tratamientos Estéticos en Canóvanas">
+<meta name="twitter:description" content="Tratamientos faciales, corporales y estética avanzada en Canóvanas, Puerto Rico.">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&amp;family=Montserrat:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+<script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+<style>
+:root{
+--bg:#FCFBFA;--white:#FFFFFF;--cream:#FFF8F2;--navy:#0D1530;--charcoal:#25252D;
+--fuchsia:#F50087;--blush:#FFF2F4;--soft-pink:#F8B8CC;--pink-border:#FFD6E3;--gold:#F5CE68;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background-color:var(--bg);color:var(--charcoal);font-family:'Montserrat',sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden;padding-bottom:env(safe-area-inset-bottom);}
+.font-display{font-family:'Cormorant Garamond',serif;}
+.hero-title{font-size:clamp(3.2rem,7vw,6.6rem);line-height:0.95;}
+.section-title{font-size:clamp(2.5rem,5vw,4.6rem);line-height:1;}
+/* Liquid glass */
+.liquid-glass{background:rgba(255,255,255,0.72);backdrop-filter:blur(20px) saturate(1.3);-webkit-backdrop-filter:blur(20px) saturate(1.3);border:1px solid rgba(13,21,48,0.08);box-shadow:0 18px 50px rgba(13,21,48,0.08);}
+/* Grain overlay */
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:5;opacity:0.015;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+.hide-scrollbar::-webkit-scrollbar{display:none;}.hide-scrollbar{-ms-overflow-style:none;scrollbar-width:none;}
+/* Reveal */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity 0.9s cubic-bezier(0.16,1,0.3,1),transform 0.9s cubic-bezier(0.16,1,0.3,1);}
+.reveal.visible{opacity:1;transform:translateY(0);}
+.d100{transition-delay:0.1s;}.d200{transition-delay:0.2s;}.d300{transition-delay:0.3s;}.d400{transition-delay:0.4s;}.d500{transition-delay:0.5s;}
+/* Nav underline */
+.nav-link{position:relative;}
+.nav-link::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:1.5px;background:var(--fuchsia);transition:width 0.3s ease;}
+.nav-link:hover::after{width:100%;}
+/* Buttons */
+.btn-primary{display:inline-flex;align-items:center;justify-content:center;gap:0.5rem;background:var(--fuchsia);color:#fff;padding:0.9rem 2rem;border-radius:9999px;font-weight:500;font-size:0.85rem;letter-spacing:0.03em;transition:all 0.4s cubic-bezier(0.25,1,0.5,1);min-height:44px;text-decoration:none;border:none;cursor:pointer;}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 14px 34px -8px rgba(245,0,135,0.45);}
+.btn-ghost{display:inline-flex;align-items:center;justify-content:center;gap:0.5rem;background:rgba(255,255,255,0.6);color:var(--navy);padding:0.9rem 2rem;border-radius:9999px;font-weight:500;font-size:0.85rem;border:1px solid rgba(13,21,48,0.12);transition:all 0.4s ease;min-height:44px;text-decoration:none;cursor:pointer;}
+.btn-ghost:hover{background:var(--navy);color:#fff;border-color:var(--navy);transform:translateY(-2px);}
+.btn-wa{background:#1FAE54;}
+.btn-wa:hover{box-shadow:0 14px 34px -8px rgba(31,174,84,0.45);}
+/* Gold line */
+.gold-line{height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);}
+.card-hover{transition:transform 0.45s cubic-bezier(0.25,1,0.5,1),box-shadow 0.45s ease;}
+.card-hover:hover{transform:translateY(-6px);box-shadow:0 24px 60px -12px rgba(13,21,48,0.16);}
+.zoom-img{transition:transform 0.7s cubic-bezier(0.25,1,0.5,1);}
+.group:hover .zoom-img{transform:scale(1.06);}
+/* Mobile menu */
+#mobile-menu{max-height:0;opacity:0;overflow:hidden;transition:max-height 0.5s cubic-bezier(0.16,1,0.3,1),opacity 0.4s ease;}
+#mobile-menu.open{max-height:420px;opacity:1;}
+/* Lang active */
+.lang-btn{position:relative;padding-bottom:3px;}
+.lang-btn.active::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--fuchsia);border-radius:2px;}
+/* Focus */
+a:focus-visible,button:focus-visible{outline:2px solid var(--fuchsia);outline-offset:2px;border-radius:4px;}
+/* Section content visibility */
+.cv-auto{content-visibility:auto;contain-intrinsic-size:1px 800px;}
+@media (prefers-reduced-motion:reduce){
+*{animation:none!important;transition:none!important;scroll-behavior:auto!important;}
+.reveal{opacity:1;transform:none;}
+}
+@media (max-width:767px){.mobile-bar-pad{padding-bottom:84px;}}
+</style>
+<!-- Local Business Structured Data -->
+<script type="application/ld+json">
+{
+"@context":"https://schema.org",
+"@type":"BeautySalon",
+"name":"Princess Esthetics",
+"description":"Tratamientos faciales, corporales, láser diodo y estética avanzada en Canóvanas, Puerto Rico.",
+"telephone":"+1-787-674-8261",
+"email":"princessestetics@yahoo.com",
+"address":{"@type":"PostalAddress","streetAddress":"Edificio Multiusos, segundo piso, oficina PB, 02 Cll Pepita Albandoz","addressLocality":"Canóvanas","addressRegion":"PR","postalCode":"00729","addressCountry":"PR"},
+"openingHoursSpecification":{"@type":"OpeningHoursSpecification","dayOfWeek":["Tuesday","Wednesday","Thursday","Friday","Saturday"],"opens":"07:00","closes":"19:00"},
+"sameAs":["https://www.instagram.com/princessesthetic2","https://www.facebook.com/share/18wR4BrHV8/"],
+"hasMap":"https://www.google.com/maps/place/Princess+Esthetics/@18.3771885,-65.9041439,17z"
+}
+</script></head>
+
+  <body class="mobile-bar-pad selection:bg-[#F50087] selection:text-white">
+    <!-- Background (component) added by Aura -->
+    <div class="aura-background-component top-0 w-full h-screen fixed opacity-70 -z-10" data-alpha-mask="78" style="filter: saturate(0.95) brightness(1.05);; mask-image: linear-gradient(to bottom, transparent, black 0%, black 78%, transparent); -webkit-mask-image: linear-gradient(to bottom, transparent, black 0%, black 78%, transparent)">
+      <div data-us-project="0WrRbFIPaKoWVkiQWBG0" class="absolute w-full h-full left-0 top-0 -z-10" style="filter: sepia(1) hue-rotate(297deg) saturate(1.2) brightness(1.4);"></div>
+      <script type="text/javascript">
+        !function(){if(!window.UnicornStudio){window.UnicornStudio={isInitialized:!1};var i=document.createElement("script");i.src="https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v1.4.29/dist/unicornStudio.umd.js",i.onload=function(){window.UnicornStudio.isInitialized||(UnicornStudio.init(),window.UnicornStudio.isInitialized=!0)},(document.head || document.body).appendChild(i)}}();
+      </script>
+    </div>
+
+    <!-- ════════ NAVIGATION ════════ -->
+    <nav id="main-nav" class="fixed top-3 left-3 right-3 md:top-6 md:left-1/2 md:-translate-x-1/2 md:right-auto md:w-[95%] md:max-w-[1240px] z-50 liquid-glass rounded-3xl md:rounded-full transition-all duration-500" aria-label="Navegación principal" style="background: rgba(255, 255, 255, 0.9); box-shadow: rgba(13, 21, 48, 0.12) 0px 10px 40px;">
+      <div class="flex items-center justify-between px-4 md:px-6 h-20 md:h-24">
+        <!-- Logo -->
+        <a href="index.html" class="flex items-center gap-2 shrink-0" aria-label="Princess Esthetics inicio">
+          <!-- REEMPLAZAR: logo oficial Princess Esthetics -->
+          <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/096923e3-18d0-458b-b81b-5b1471885ec7_800w.png" alt="Princess Esthetics" class="md:h-20 md:scale-125 origin-left w-auto h-16 object-contain translate-x-8 scale-[1.7]" style="object-fit:contain" width="160" height="48">
+        </a>
+        <!-- Desktop nav -->
+        <div class="hidden lg:flex items-center gap-8 text-sm font-medium text-[#25252D]">
+          <a href="index.html" class="nav-link" data-es="Inicio" data-en="Home">
+            Inicio
+          </a>
+          <a href="index.html#nosotros" class="nav-link" data-es="Nosotros" data-en="About">
+            Nosotros
+          </a>
+          <a href="servicios.html" class="nav-link" data-es="Servicios" data-en="Services">
+            Servicios
+          </a>
+          <a href="galeria.html" class="nav-link" data-es="Galería" data-en="Gallery">
+            Galería
+          </a>
+          <a href="index.html#testimonios" class="nav-link" data-es="Testimonios" data-en="Testimonials">
+            Testimonios
+          </a>
+          <a href="index.html#ubicacion" class="nav-link" data-es="Ubicación" data-en="Location">
+            Ubicación
+          </a>
+        </div>
+        <!-- Right controls -->
+        <div class="flex items-center gap-3 md:gap-4">
+          <div class="flex items-center gap-1 text-sm font-semibold text-[#25252D]" role="group" aria-label="Selector de idioma">
+            <button class="lang-btn active" data-lang="es" aria-label="Cambiar a español">
+              ES
+            </button>
+            <span class="text-[#0D1530]/30">|</span>
+            <button class="lang-btn" data-lang="en" aria-label="Switch to English">
+              EN
+            </button>
+          </div>
+          <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20recibir%20informaci%C3%B3n%20sobre%20sus%20servicios%20y%20disponibilidad%20para%20una%20cita." target="_blank" rel="noopener" class="hidden md:inline-flex btn-primary py-2.5 px-5 text-xs js-wa" data-es="Consultar" data-en="Contact us">
+            Consultar
+          </a>
+          <button id="menu-toggle" class="lg:hidden text-[#0D1530] p-2" aria-label="Abrir menú" aria-expanded="false" aria-controls="mobile-menu">
+            <iconify-icon id="menu-icon" icon="solar:hamburger-menu-linear" width="26" class=""></iconify-icon>
+          </button>
+        </div>
+      </div>
+      <!-- Mobile menu -->
+      <div id="mobile-menu" class="lg:hidden px-5">
+        <div class="flex flex-col gap-1 py-4 border-t border-[#0D1530]/10 text-[#25252D] font-medium">
+          <a href="index.html" class="py-3 js-menu-link" data-es="Inicio" data-en="Home">
+            Inicio
+          </a>
+          <a href="index.html#nosotros" class="py-3 js-menu-link" data-es="Nosotros" data-en="About">
+            Nosotros
+          </a>
+          <a href="servicios.html" class="py-3 js-menu-link" data-es="Servicios" data-en="Services">
+            Servicios
+          </a>
+          <a href="galeria.html" class="py-3 js-menu-link" data-es="Galería" data-en="Gallery">
+            Galería
+          </a>
+
+          <a href="index.html#ubicacion" class="py-3 js-menu-link" data-es="Ubicación" data-en="Location">
+            Ubicación
+          </a>
+          <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20recibir%20informaci%C3%B3n%20sobre%20sus%20servicios%20y%20disponibilidad%20para%20una%20cita." target="_blank" rel="noopener" class="btn-primary mt-3 js-wa js-menu-link" data-es="Consultar" data-en="Contact us">
+            Consultar
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <main class="">
+      <!-- ════════ HERO ════════ -->
+      <header class="relative min-h-[92vh] flex items-center pt-32 pb-16 px-5 md:px-10 overflow-hidden">
+        <div class="absolute top-24 -left-20 w-72 h-px rotate-[20deg] bg-gradient-to-r from-transparent via-[#F5CE68]/60 to-transparent pointer-events-none"></div>
+        <div class="absolute bottom-40 right-10 w-40 h-40 rounded-full bg-[#F50087]/5 blur-3xl pointer-events-none"></div>
+        <div class="grid lg:grid-cols-2 gap-12 w-full max-w-[1240px] mr-auto ml-auto gap-x-12 gap-y-12 items-center">
+          <div class="">
+            <span class="reveal inline-flex items-center gap-2 text-[11px] tracking-[0.25em] font-semibold mb-6 visible text-[#F8B8CC]"></span>
+            <h1 class="reveal d100 font-display hero-title font-medium mb-6 visible text-[#FFF8F2]" data-es="Belleza que se siente. Resultados que se reflejan." data-en="Beauty you can feel. Results you can see." style="text-shadow: rgba(0, 0, 0, 0.25) 0px 2px 18px;">
+              Belleza que se siente. Resultados que se reflejan.
+            </h1>
+            <p class="reveal d200 font-light max-w-xl mb-8 leading-relaxed visible text-[#FFF8F2]/[0.82]" data-es="Tratamientos faciales, corporales y de estética avanzada creados para cuidar tu piel, realzar tu belleza natural y ayudarte a sentirte más segura." data-en="Facial, body, and advanced aesthetic treatments created to care for your skin, enhance your natural beauty, and help you feel more confident.">
+              Tratamientos faciales, corporales y de estética avanzada creados
+              para cuidar tu piel, realzar tu belleza natural y ayudarte a
+              sentirte más segura.
+            </p>
+            <div class="reveal d300 flex flex-wrap gap-3 mb-6 visible">
+              <a href="servicios.html" class="btn-primary" data-es="Explorar servicios" data-en="Explore services">
+                Explorar servicios
+              </a>
+              <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20recibir%20informaci%C3%B3n%20sobre%20sus%20servicios%20y%20disponibilidad%20para%20una%20cita." target="_blank" rel="noopener" class="btn-ghost js-wa">
+                <iconify-icon icon="solar:chat-round-dots-linear" width="18"></iconify-icon>
+                <span data-es="Contactar por WhatsApp" data-en="Contact us on WhatsApp" class="">
+                  Contactar por WhatsApp
+                </span>
+              </a>
+            </div>
+            <a href="tel:+17876748261" class="reveal d400 inline-flex items-center gap-2 text-sm font-medium transition-colors visible text-white/[0.72] hover:text-[#F8B8CC]">
+              <iconify-icon icon="solar:phone-calling-linear" width="18"></iconify-icon>
+              <span data-es="Llamar ahora" data-en="Call now" class="">
+                Llamar ahora
+              </span>
+            </a>
+          </div>
+          <div class="relative reveal d200 visible">
+            <div class="relative rounded-[2.5rem] overflow-hidden shadow-[0_30px_80px_-20px_rgba(13,21,48,0.25)]">
+              <!-- REEMPLAZAR: imagen profesional del estudio Princess Esthetics -->
+              <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/41a1fa60-0d81-40c3-93a9-11e4063aa408_3840w.png" alt="Tratamiento facial profesional en Princess Esthetics" class="w-full h-[420px] md:h-[560px] object-cover scale-[1.03]" width="1200" height="560">
+              <div class="absolute inset-0 bg-gradient-to-t from-[#FFF8F2]/40 to-transparent"></div>
+            </div>
+            <div class="absolute -bottom-5 left-4 liquid-glass rounded-2xl px-4 py-3 flex items-center gap-2 text-xs font-medium text-[#0D1530]">
+              <iconify-icon icon="solar:stars-linear" width="18" class="text-[#F5CE68]"></iconify-icon>
+              <span data-es="8+ años de experiencia" data-en="8+ years of experience" class="">
+                8+ años de experiencia
+              </span>
+            </div>
+            <div class="absolute top-6 -right-2 liquid-glass rounded-2xl px-4 py-3 flex items-center gap-2 text-xs font-medium text-[#0D1530]">
+              <iconify-icon icon="solar:parking-linear" width="18" class="text-[#F50087]"></iconify-icon>
+              <span data-es="Estacionamiento disponible" data-en="Parking available" class="">
+                Estacionamiento disponible
+              </span>
+            </div>
+            <div class="absolute bottom-20 -right-2 liquid-glass rounded-2xl px-4 py-3 flex items-center gap-2 text-xs font-medium text-[#0D1530]">
+              <iconify-icon icon="solar:calendar-linear" width="18" class="text-[#F50087]"></iconify-icon>
+              <span data-es="Martes a sábado" data-en="Tuesday through Saturday">
+                Martes a sábado
+              </span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- ════════ ABOUT ════════ -->
+      <section id="nosotros" class="py-24 px-5 md:px-10 bg-[#FFF8F2] cv-auto">
+        <div class="max-w-[1240px] mx-auto grid lg:grid-cols-2 gap-14 items-center">
+          <div class="reveal relative order-2 lg:order-1 visible">
+            <!-- REEMPLAZAR: imagen del espacio o profesional -->
+            <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/70856ac8-a357-4156-8c79-d49f2558521e_3840w.png" alt="Espacio profesional de Princess Esthetics" loading="lazy" class="w-full h-[460px] object-cover rounded-[2.5rem]" width="1000" height="460">
+          </div>
+        </div>
+        <div class="reveal d100 order-1 lg:order-2 visible">
+          <span class="text-[11px] tracking-[0.25em] font-semibold text-[#F50087]" data-es="SOBRE PRINCESS ESTHETICS" data-en="ABOUT PRINCESS ESTHETICS">
+            SOBRE PRINCESS ESTHETICS
+          </span>
+          <h2 class="font-display section-title font-medium text-[#0D1530] mt-4 mb-6" data-es="Un espacio creado para cuidar de ti." data-en="A space created to care for you.">
+            Un espacio creado para cuidar de ti.
+          </h2>
+          <div class="gold-line w-40 mb-6"></div>
+          <p class="text-[#25252D]/75 font-light leading-relaxed mb-4" data-es="En Princess Esthetics creemos que el cuidado personal va mucho más allá de la apariencia. Es un momento para reconectar contigo, fortalecer tu confianza y darle a tu piel y a tu cuerpo la atención que merecen." data-en="At Princess Esthetics, we believe personal care goes far beyond appearance. It is an opportunity to reconnect with yourself, strengthen your confidence, and give your skin and body the attention they deserve.">
+            En Princess Esthetics creemos que el cuidado personal va mucho más
+            allá de la apariencia. Es un momento para reconectar contigo,
+            fortalecer tu confianza y darle a tu piel y a tu cuerpo la atención
+            que merecen.
+          </p>
+          <p class="text-[#25252D]/75 font-light leading-relaxed mb-6" data-es="Con más de 8 años de experiencia, ofrecemos tratamientos faciales, corporales y servicios de estética avanzada dentro de un ambiente profesional, cómodo y cuidadosamente preparado para cada clienta." data-en="With more than 8 years of experience, we provide facial treatments, body treatments, and advanced aesthetic services in a professional, comfortable, and carefully prepared environment.">
+            Con más de 8 años de experiencia, ofrecemos tratamientos faciales,
+            corporales y servicios de estética avanzada dentro de un ambiente
+            profesional, cómodo y cuidadosamente preparado para cada clienta.
+          </p>
+          <blockquote class="font-display text-2xl md:text-3xl italic text-[#0D1530] border-l-2 border-[#F50087] pl-5" data-es="“Cada tratamiento comienza escuchando lo que tu piel y tu cuerpo necesitan.”" data-en="“Every treatment begins by understanding what your skin and body need.”">
+            “Cada tratamiento comienza escuchando lo que tu piel y tu cuerpo
+            necesitan.”
+          </blockquote>
+        </div>
+      </section>
+
+      <!-- ════════ SERVICE CATEGORIES ════════ -->
+      <section class="py-24 px-5 md:px-10 cv-auto">
+        <div class="max-w-[1240px] mx-auto">
+          <div class="text-center max-w-2xl mx-auto mb-16 reveal visible">
+            <span class="text-[11px] tracking-[0.25em] font-semibold text-[#F8B8CC]" data-es="NUESTROS SERVICIOS" data-en="OUR SERVICES">
+              NUESTROS SERVICIOS
+            </span>
+            <h2 class="font-display section-title font-medium mt-4 mb-5 text-[#FFF8F2]" data-es="Cuidado personalizado para cada etapa de ti." data-en="Personalized care for every stage of you." style="text-shadow: rgba(0, 0, 0, 0.25) 0px 2px 18px;">
+              Cuidado personalizado para cada etapa de ti.
+            </h2>
+            <p class="font-light text-[#FFF8F2]/[0.82]" data-es="Explora tratamientos diseñados para complementar tus objetivos de cuidado facial, corporal y bienestar estético." data-en="Explore treatments designed to complement your facial-care, body-care, and aesthetic-wellness goals.">
+              Explora tratamientos diseñados para complementar tus objetivos de
+              cuidado facial, corporal y bienestar estético.
+            </p>
+          </div>
+          <!-- Three main 3:4 cards -->
+          <div class="grid md:grid-cols-3 gap-6 mb-6">
+            <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Faciales.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" class="group card-hover reveal d100 relative rounded-[2rem] overflow-hidden border border-[#FFD6E3] visible js-wa-service" target="_blank" rel="noopener" data-wa-service-es="Faciales" data-wa-service-en="Facial Treatments">
+              <div class="aspect-[3/4] overflow-hidden relative">
+                <!-- REEMPLAZAR: imagen faciales -->
+                <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/4a7b64da-1fb8-4754-a28f-d8bee94255b6_1600w.png" alt="Tratamientos faciales" loading="lazy" class="w-full h-full object-cover zoom-img" width="800" height="1066">
+                <div class="absolute inset-0 bg-gradient-to-t from-[#0D1530]/85 via-[#0D1530]/10 to-transparent"></div>
+
+                <div class="absolute bottom-0 p-6">
+                  <h3 class="font-display text-2xl text-white mb-1" data-es="Faciales" data-en="Facial Treatments">
+                    Faciales
+                  </h3>
+                  <p class="text-white/70 text-xs font-light mb-3" data-es="Limpieza, hidratación y cuidado profundo para tu piel." data-en="Cleansing, hydration, and deep care for your skin.">
+                    Limpieza, hidratación y cuidado profundo para tu piel.
+                  </p>
+                  <span class="text-[#F5CE68] text-sm font-semibold" data-es="Desde $49" data-en="Starting at $49">
+                    Desde $49
+                  </span>
+                </div>
+              </div>
+            </a>
+            <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Tecnolog%C3%ADa%20avanzada.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" class="group card-hover reveal d200 relative rounded-[2rem] overflow-hidden border border-[#FFD6E3] js-wa-service" target="_blank" rel="noopener" data-wa-service-es="Tecnología avanzada" data-wa-service-en="Advanced Aesthetics">
+              <div class="aspect-[3/4] overflow-hidden relative">
+                <!-- REEMPLAZAR: imagen tecnología avanzada -->
+                <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/5693d8da-2b7e-48fa-b0f3-a02ea320655f_1600w.png" alt="Tecnología estética avanzada" loading="lazy" class="w-full h-full object-cover zoom-img" width="800" height="1066">
+                <div class="absolute inset-0 bg-gradient-to-t from-[#0D1530]/85 via-[#0D1530]/10 to-transparent"></div>
+
+                <div class="absolute bottom-0 p-6">
+                  <h3 class="font-display text-2xl text-white mb-1" data-es="Tecnología avanzada" data-en="Advanced Aesthetics">
+                    Tecnología avanzada
+                  </h3>
+                  <p class="text-white/70 text-xs font-light mb-3" data-es="Estética avanzada con equipos especializados." data-en="Advanced aesthetics with specialized equipment.">
+                    Estética avanzada con equipos especializados.
+                  </p>
+                  <span class="text-[#F5CE68] text-sm font-semibold" data-es="Desde $55" data-en="Starting at $55">
+                    Desde $55
+                  </span>
+                </div>
+              </div>
+            </a>
+            <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Tratamientos%20corporales.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" class="group card-hover reveal d300 relative rounded-[2rem] overflow-hidden border border-[#FFD6E3] js-wa-service" target="_blank" rel="noopener" data-wa-service-es="Tratamientos corporales" data-wa-service-en="Body Treatments">
+              <div class="aspect-[3/4] overflow-hidden relative">
+                <!-- REEMPLAZAR: imagen corporales -->
+                <img src="https://images.unsplash.com/photo-1519823551278-64ac92734fb1?w=800&amp;q=80" alt="Tratamientos corporales" loading="lazy" class="w-full h-full object-cover zoom-img" width="800" height="1066">
+                <div class="absolute inset-0 bg-gradient-to-t from-[#0D1530]/85 via-[#0D1530]/10 to-transparent"></div>
+
+                <div class="absolute bottom-0 p-6">
+                  <h3 class="font-display text-2xl text-white mb-1" data-es="Tratamientos corporales" data-en="Body Treatments">
+                    Tratamientos corporales
+                  </h3>
+                  <p class="text-white/70 text-xs font-light mb-3" data-es="Cuidado corporal para tu bienestar y confianza." data-en="Body care for your wellness and confidence.">
+                    Cuidado corporal para tu bienestar y confianza.
+                  </p>
+                  <span class="text-[#F5CE68] text-sm font-semibold" data-es="Desde $30" data-en="Starting at $30">
+                    Desde $30
+                  </span>
+                </div>
+              </div>
+            </a>
+          </div>
+          <!-- Two wide cards -->
+          <div class="grid md:grid-cols-2 gap-6">
+            <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20L%C3%A1ser%20diodo.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" class="group card-hover reveal d100 relative rounded-[2rem] overflow-hidden border border-[#FFD6E3] js-wa-service" target="_blank" rel="noopener" data-wa-service-es="Láser diodo" data-wa-service-en="Diode Laser">
+              <div class="aspect-[16/9] md:aspect-[2/1] overflow-hidden relative">
+                <!-- REEMPLAZAR: imagen láser diodo -->
+                <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/5a485c3d-6d8b-4863-be88-ab846758170a_3840w.png" alt="Láser diodo" loading="lazy" class="w-full h-full object-cover zoom-img" width="900" height="450">
+                <div class="absolute inset-0 bg-gradient-to-r from-[#0D1530]/85 to-[#0D1530]/20"></div>
+
+                <div class="absolute bottom-0 p-6">
+                  <h3 class="font-display text-2xl text-white mb-1" data-es="Láser diodo" data-en="Diode Laser">
+                    Láser diodo
+                  </h3>
+                  <p class="text-white/70 text-xs font-light mb-3" data-es="Paquetes de depilación láser de 8 sesiones." data-en="8-session laser hair-removal packages.">
+                    Paquetes de depilación láser de 8 sesiones.
+                  </p>
+                  <span class="text-[#F5CE68] text-sm font-semibold" data-es="Paquetes desde $110" data-en="8-session packages starting at $110">
+                    Paquetes desde $110
+                  </span>
+                </div>
+              </div>
+            </a>
+            <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Depilaci%C3%B3n%20con%20cera.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" class="group card-hover reveal d200 relative rounded-[2rem] overflow-hidden border border-[#FFD6E3] js-wa-service" target="_blank" rel="noopener" data-wa-service-es="Depilación con cera" data-wa-service-en="Waxing">
+              <div class="aspect-[16/9] md:aspect-[2/1] overflow-hidden relative">
+                <!-- REEMPLAZAR: imagen depilación -->
+                <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/51a629ae-591d-48c4-8c3d-3de4d594da8c_800w.png" alt="Depilación con cera" loading="lazy" class="w-full h-full object-cover zoom-img" width="900" height="450">
+                <div class="absolute inset-0 bg-gradient-to-r from-[#0D1530]/85 to-[#0D1530]/20"></div>
+
+                <div class="absolute bottom-0 p-6">
+                  <h3 class="font-display text-2xl text-white mb-1" data-es="Depilación con cera" data-en="Waxing">
+                    Depilación con cera
+                  </h3>
+                  <p class="text-white/70 text-xs font-light mb-3" data-es="Depilación profesional y cuidadosa." data-en="Professional and careful waxing.">
+                    Depilación profesional y cuidadosa.
+                  </p>
+                  <span class="text-[#F5CE68] text-sm font-semibold" data-es="Desde $7" data-en="Starting at $7">
+                    Desde $7
+                  </span>
+                </div>
+              </div>
+            </a>
+          </div>
+          <div class="text-center mt-12 reveal">
+            <a href="servicios.html" class="btn-primary">
+              <span data-es="Ver todos los servicios y precios" data-en="View all services and pricing" class="">
+                Ver todos los servicios y precios
+              </span>
+              <iconify-icon icon="solar:arrow-right-linear" width="18" class=""></iconify-icon>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- ════════ PRINCESS EXPERIENCE ════════ -->
+      <section id="experience" class="py-24 px-5 md:px-10 bg-[#FFF2F4] cv-auto">
+        <div class="max-w-[1240px] mx-auto">
+          <div class="grid lg:grid-cols-2 gap-12 items-start mb-14">
+            <div class="reveal">
+              <span class="text-[11px] tracking-[0.25em] font-semibold text-[#F50087]" data-es="LA EXPERIENCIA PRINCESS" data-en="THE PRINCESS EXPERIENCE">
+                LA EXPERIENCIA PRINCESS
+              </span>
+              <h2 class="font-display section-title font-medium text-[#0D1530] mt-4" data-es="Profesionalismo que se refleja en cada detalle." data-en="Professional care reflected in every detail.">
+                Profesionalismo que se refleja en cada detalle.
+              </h2>
+            </div>
+            <div class="reveal d100">
+              <p class="text-[#25252D]/75 font-light leading-relaxed mb-4" data-es="Princess Esthetics se distingue por combinar experiencia, atención personalizada, una presencia profesional y protocolos cuidadosamente adaptados a las necesidades de cada clienta." data-en="Princess Esthetics stands out by combining experience, personalized attention, a professional presence, and protocols carefully adapted to each client’s needs.">
+                Princess Esthetics se distingue por combinar experiencia,
+                atención personalizada, una presencia profesional y protocolos
+                cuidadosamente adaptados a las necesidades de cada clienta.
+              </p>
+              <p class="text-[#25252D]/75 font-light leading-relaxed" data-es="Cada visita está diseñada para que te sientas escuchada, cómoda y segura mientras trabajamos juntas en tus objetivos de cuidado personal." data-en="Every visit is designed to help you feel heard, comfortable, and confident as we work together toward your personal-care goals.">
+                Cada visita está diseñada para que te sientas escuchada, cómoda
+                y segura mientras trabajamos juntas en tus objetivos de cuidado
+                personal.
+              </p>
+            </div>
+          </div>
+          <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-6">
+            <div class="reveal d100 bg-white rounded-2xl p-6 border border-[#FFD6E3]">
+              <h3 class="font-display text-xl text-[#0D1530]" data-es="Más de 8 años de experiencia" data-en="More than 8 years of experience">
+                Más de 8 años de experiencia
+              </h3>
+            </div>
+            <div class="reveal d200 bg-white rounded-2xl p-6 border border-[#FFD6E3]">
+              <h3 class="font-display text-xl text-[#0D1530]" data-es="Atención personalizada" data-en="Personalized attention">
+                Atención personalizada
+              </h3>
+            </div>
+            <div class="reveal d300 bg-white rounded-2xl p-6 border border-[#FFD6E3]">
+              <h3 class="font-display text-xl text-[#0D1530]" data-es="Tecnología estética avanzada" data-en="Advanced aesthetic technology">
+                Tecnología estética avanzada
+              </h3>
+            </div>
+            <div class="reveal d400 bg-white rounded-2xl p-6 border border-[#FFD6E3]">
+              <h3 class="font-display text-xl text-[#0D1530]" data-es="Ambiente cómodo y profesional" data-en="Comfortable and professional environment">
+                Ambiente cómodo y profesional
+              </h3>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ════════ STATS ════════ -->
+      <section class="py-20 px-5 md:px-10 border-y border-[#FFD6E3] cv-auto">
+        <div class="max-w-[1240px] mx-auto grid grid-cols-2 md:grid-cols-4 gap-10 text-center">
+          <div class="reveal d100">
+            <div class="font-display text-5xl md:text-6xl font-medium mb-2 text-[#F5CE68]">
+              <span class="counter" data-count="8">8</span>
+              +
+            </div>
+            <p class="text-xs uppercase tracking-[0.15em] font-medium text-white/[0.72]" data-es="Años de experiencia" data-en="Years of experience">
+              Años de experiencia
+            </p>
+          </div>
+          <div class="reveal d200">
+            <div class="font-display text-5xl md:text-6xl font-medium mb-2 text-[#F5CE68]">
+              <span class="counter" data-count="30">30</span>
+              +
+            </div>
+            <p class="text-xs uppercase tracking-[0.15em] font-medium text-white/[0.72]" data-es="Servicios estéticos" data-en="Aesthetic services">
+              Servicios estéticos
+            </p>
+          </div>
+          <div class="reveal d300">
+            <div class="font-display text-5xl md:text-6xl font-medium mb-2 text-[#F5CE68]">
+              <span class="counter" data-count="5">5</span>
+            </div>
+            <p class="text-xs uppercase tracking-[0.15em] font-medium text-white/[0.72]" data-es="Categorías de tratamiento" data-en="Treatment categories">
+              Categorías de tratamiento
+            </p>
+          </div>
+          <div class="reveal d400">
+            <div class="font-display text-5xl md:text-6xl font-medium mb-2 text-[#F5CE68]">
+              <span class="counter" data-count="12">12</span>
+            </div>
+            <p class="text-xs uppercase tracking-[0.15em] font-medium text-white/[0.72]" data-es="Horas de disponibilidad diaria" data-en="Hours of daily availability">
+              Horas de disponibilidad diaria
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ════════ RESULTS PREVIEW ════════ -->
+      <section class="py-24 px-5 md:px-10 cv-auto">
+        <div class="max-w-[1240px] mx-auto">
+          <div class="max-w-2xl mb-14 reveal">
+            <span class="text-[11px] tracking-[0.25em] font-semibold text-[#F8B8CC]" data-es="RESULTADOS Y EXPERIENCIAS" data-en="RESULTS AND EXPERIENCES">
+              RESULTADOS Y EXPERIENCIAS
+            </span>
+            <h2 class="font-display section-title font-medium mt-4 mb-5 text-[#FFF8F2]" data-es="El cuidado se refleja en cada detalle." data-en="Care is reflected in every detail." style="text-shadow: rgba(0, 0, 0, 0.25) 0px 2px 18px;">
+              El cuidado se refleja en cada detalle.
+            </h2>
+            <p class="font-light text-[#FFF8F2]/[0.82]" data-es="Explora nuestra galería para conocer el espacio, los tratamientos y una selección de resultados compartidos con autorización." data-en="Explore our gallery to discover our space, treatments, and a selection of results shared with permission.">
+              Explora nuestra galería para conocer el espacio, los tratamientos
+              y una selección de resultados compartidos con autorización.
+            </p>
+          </div>
+          <div class="grid md:grid-cols-3 gap-5 mb-10">
+            <div class="reveal d100 md:row-span-2 rounded-[2rem] overflow-hidden border border-[#FFD6E3] relative">
+              <!-- REEMPLAZAR: imagen galería grande -->
+              <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/7827211b-c8b6-4213-a4a4-a7f17721a572_3840w.png" alt="Espacio de Princess Esthetics" loading="lazy" class="w-full h-full object-cover min-h-[300px]" width="900" height="600">
+            </div>
+            <div class="reveal d200 rounded-[2rem] overflow-hidden border border-[#FFD6E3]">
+              <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/bfaee04a-617e-4c8c-a511-11df9f120c7f_3840w.png" alt="Tratamiento facial" loading="lazy" class="w-full h-48 object-cover" width="600" height="300">
+            </div>
+            <div class="reveal d300 rounded-[2rem] overflow-hidden border border-[#FFD6E3]">
+              <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/57a456bc-6635-46d6-bd8a-71b066d1c370_3840w.png" alt="Cuidado de la piel" loading="lazy" class="w-full h-48 object-cover" width="600" height="300">
+            </div>
+            <div class="reveal d400 md:col-span-2 rounded-[2rem] overflow-hidden border border-[#FFD6E3] relative group">
+              <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/b3047e29-89aa-42dd-a165-47d6d9fc40c1_800w.png" alt="Resultados antes y después" loading="lazy" class="w-full h-48 md:h-full min-h-[250px] object-cover zoom-img" width="900" height="400">
+              <div class="absolute inset-0 bg-gradient-to-t from-[#0D1530]/85 via-[#0D1530]/10 to-transparent pointer-events-none"></div>
+              <div class="absolute bottom-0 left-0 p-6">
+                <p class="font-display text-2xl text-white" data-es="Antes y después" data-en="Before &amp; after">
+                  Antes y después
+                </p>
+                <p class="text-sm text-white/70 font-light mt-1" data-es="Resultados reales de nuestros tratamientos" data-en="Real results from our treatments">
+                  Resultados reales de nuestros tratamientos
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="text-center reveal">
+            <a href="galeria.html" class="btn-ghost">
+              <span data-es="Explorar la galería" data-en="Explore the gallery" class="">
+                Explorar la galería
+              </span>
+              <iconify-icon icon="solar:arrow-right-linear" width="18" class=""></iconify-icon>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- ════════ TESTIMONIAL PREVIEW ════════ -->
+      <section class="py-24 px-5 md:px-10 bg-[#FFF8F2] cv-auto" id="testimonios">
+        <div class="max-w-[1240px] mx-auto">
+          <h2 class="font-display section-title font-medium text-[#0D1530] text-center mb-12 reveal" data-es="Experiencias que hablan por sí solas." data-en="Experiences that speak for themselves.">
+            Experiencias que hablan por sí solas.
+          </h2>
+          <div class="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto mb-10">
+            <div class="reveal d100 bg-white rounded-[2rem] p-8 border border-[#FFD6E3] text-center">
+              <iconify-icon icon="solar:chat-round-dots-linear" width="32" class="text-[#F5CE68] mb-4"></iconify-icon>
+              <p class="text-[#25252D]/60 font-light italic" data-es="Los testimonios de nuestras clientas se añadirán próximamente." data-en="Testimonials from our clients will be added soon.">
+                Los testimonios de nuestras clientas se añadirán próximamente.
+              </p>
+            </div>
+            <div class="reveal d200 bg-white rounded-[2rem] p-8 border border-[#FFD6E3] text-center">
+              <iconify-icon icon="solar:chat-round-dots-linear" width="32" class="text-[#F5CE68] mb-4"></iconify-icon>
+              <p class="text-[#25252D]/60 font-light italic" data-es="Los testimonios de nuestras clientas se añadirán próximamente." data-en="Testimonials from our clients will be added soon.">
+                Los testimonios de nuestras clientas se añadirán próximamente.
+              </p>
+            </div>
+          </div>
+          <div class="text-center reveal">
+            <a href="galeria.html" class="inline-flex items-center gap-2 text-sm font-medium text-[#0D1530] hover:text-[#F50087] transition-colors">
+              <span data-es="Ver experiencias y resultados" data-en="View experiences and results" class="">
+                Ver experiencias y resultados
+              </span>
+              <iconify-icon icon="solar:arrow-right-linear" width="16"></iconify-icon>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- ════════ APPOINTMENT PROCESS ════════ -->
+      <section id="citas" class="py-24 px-5 md:px-10 cv-auto">
+        <div class="max-w-[1240px] mx-auto">
+          <div class="text-center max-w-2xl mx-auto mb-16 reveal">
+            <span class="text-[11px] tracking-[0.25em] font-semibold text-[#F8B8CC]" data-es="CÓMO COORDINAR TU CITA" data-en="HOW TO SCHEDULE YOUR APPOINTMENT">
+              CÓMO COORDINAR TU CITA
+            </span>
+            <h2 class="font-display section-title font-medium mt-4 text-[#FFF8F2]" data-es="Tu próxima experiencia comienza aquí." data-en="Your next experience starts here." style="text-shadow: rgba(0, 0, 0, 0.25) 0px 2px 18px;">
+              Tu próxima experiencia comienza aquí.
+            </h2>
+          </div>
+          <div class="grid md:grid-cols-3 gap-6 relative">
+            <a href="servicios.html" class="reveal d100 card-hover bg-white rounded-[2rem] p-8 border border-[#FFD6E3] block">
+              <div class="w-12 h-12 rounded-full bg-[#FFF2F4] flex items-center justify-center font-display text-2xl text-[#F50087] mb-5">
+                1
+              </div>
+              <h3 class="font-display text-2xl text-[#0D1530] mb-2" data-es="Explora los servicios" data-en="Explore the services">
+                Explora los servicios
+              </h3>
+              <p class="text-[#25252D]/70 font-light text-sm" data-es="Conoce nuestros tratamientos y precios para identificar la opción que más te interesa." data-en="Review our treatments and pricing to identify the option that interests you most.">
+                Conoce nuestros tratamientos y precios para identificar la
+                opción que más te interesa.
+              </p>
+            </a>
+            <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20recibir%20informaci%C3%B3n%20sobre%20sus%20servicios%20y%20disponibilidad%20para%20una%20cita." target="_blank" rel="noopener" class="reveal d200 card-hover bg-white rounded-[2rem] p-8 border border-[#FFD6E3] block js-wa">
+              <div class="w-12 h-12 rounded-full bg-[#FFF2F4] flex items-center justify-center font-display text-2xl text-[#F50087] mb-5">
+                2
+              </div>
+              <h3 class="font-display text-2xl text-[#0D1530] mb-2" data-es="Comunícate por WhatsApp" data-en="Contact us on WhatsApp">
+                Comunícate por WhatsApp
+              </h3>
+              <p class="text-[#25252D]/70 font-light text-sm" data-es="Escríbenos para recibir orientación y consultar los espacios disponibles." data-en="Message us for guidance and to check available appointment times.">
+                Escríbenos para recibir orientación y consultar los espacios
+                disponibles.
+              </p>
+            </a>
+            <div class="reveal d300 card-hover bg-white rounded-[2rem] p-8 border border-[#FFD6E3]">
+              <div class="w-12 h-12 rounded-full bg-[#FFF2F4] flex items-center justify-center font-display text-2xl text-[#F50087] mb-5">
+                3
+              </div>
+              <h3 class="font-display text-2xl text-[#0D1530] mb-2" data-es="Confirma con tu depósito" data-en="Confirm with your deposit">
+                Confirma con tu depósito
+              </h3>
+              <p class="text-[#25252D]/70 font-light text-sm" data-es="Tu cita queda confirmada luego de completar el depósito solicitado." data-en="Your appointment is confirmed after completing the required deposit.">
+                Tu cita queda confirmada luego de completar el depósito
+                solicitado.
+              </p>
+            </div>
+          </div>
+          <div class="mt-10 liquid-glass rounded-2xl p-5 flex items-center gap-3 max-w-2xl mx-auto reveal">
+            <iconify-icon icon="solar:shield-check-linear" width="24" class="text-[#F50087]"></iconify-icon>
+            <p class="text-sm font-medium text-[#0D1530]" data-es="Se requiere un depósito para confirmar todas las citas." data-en="A deposit is required to confirm all appointments.">
+              Se requiere un depósito para confirmar todas las citas.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ════════ LOCATION ════════ -->
+      <section class="py-24 px-5 md:px-10 bg-[#FFF8F2] cv-auto" id="ubicacion">
+        <div class="max-w-[1240px] mx-auto grid lg:grid-cols-2 gap-10 items-stretch">
+          <div class="reveal rounded-[2rem] overflow-hidden border border-[#FFD6E3] min-h-[360px] order-1">
+            <iframe title="Mapa de Princess Esthetics" src="https://www.google.com/maps?q=Princess+Esthetics+Can%C3%B3vanas&amp;output=embed" class="w-full h-full min-h-[360px] border-0" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+          </div>
+          <div class="reveal d100 liquid-glass rounded-[2rem] p-8 md:p-10 order-2">
+            <h2 class="font-display text-4xl md:text-5xl font-medium text-[#0D1530] mb-6" data-es="Visítanos en Canóvanas" data-en="Visit us in Canóvanas">
+              Visítanos en Canóvanas
+            </h2>
+            <div class="flex items-start gap-3 mb-5">
+              <iconify-icon icon="solar:map-point-linear" width="22" class="text-[#F50087] mt-1 shrink-0"></iconify-icon>
+              <p class="text-[#25252D]/80 font-light leading-relaxed">
+                Edificio Multiusos, segundo piso, oficina PB
+                <br>
+                02 Cll Pepita Albandoz
+                <br>
+                Canóvanas, PR 00729
+              </p>
+            </div>
+            <div class="flex items-start gap-3 mb-6">
+              <iconify-icon icon="solar:clock-circle-linear" width="22" class="text-[#F50087] mt-1 shrink-0"></iconify-icon>
+              <p class="text-[#25252D]/80 font-light">
+                <span data-es="Martes a sábado" data-en="Tuesday through Saturday" class="">
+                  Martes a sábado
+                </span>
+                <br>
+                <span data-es="7:00 a. m. a 7:00 p. m." data-en="7:00 a.m. to 7:00 p.m." class="">
+                  7:00 a. m. a 7:00 p. m.
+                </span>
+              </p>
+            </div>
+            <ul class="space-y-2 mb-8 text-sm text-[#25252D]/75 font-light">
+              <li class="flex items-center gap-2">
+                <iconify-icon icon="solar:parking-linear" width="18" class="text-[#F5CE68]"></iconify-icon>
+                <span data-es="Estacionamiento disponible" data-en="Parking available" class="">
+                  Estacionamiento disponible
+                </span>
+              </li>
+              <li class="flex items-center gap-2">
+                <iconify-icon icon="solar:clock-circle-linear" width="18" class="text-[#F5CE68]"></iconify-icon>
+                <span data-es="Horario amplio y cómodo" data-en="Extended and convenient hours" class="">
+                  Horario amplio y cómodo
+                </span>
+              </li>
+              <li class="flex items-center gap-2">
+                <iconify-icon icon="solar:calendar-linear" width="18" class="text-[#F5CE68]"></iconify-icon>
+                <span data-es="Disponibilidad adaptable con coordinación previa" data-en="Flexible availability with prior coordination" class="">
+                  Disponibilidad adaptable con coordinación previa
+                </span>
+              </li>
+            </ul>
+            <div class="flex flex-wrap gap-3">
+              <a href="https://www.google.com/maps/place/Princess+Esthetics/@18.3771885,-65.9041439,17z/data=!3m1!4b1!4m6!3m5!1s0x8c036128621884cb:0x1801ff99fe5c029d!8m2!3d18.3771834!4d-65.901569!16s%2Fg%2F11p6f9cdhx" target="_blank" rel="noopener" class="btn-primary text-xs">
+                <iconify-icon icon="solar:map-point-linear" width="16"></iconify-icon>
+                <span data-es="Abrir en Google Maps" data-en="Open in Google Maps" class="">
+                  Abrir en Google Maps
+                </span>
+              </a>
+              <a href="tel:+17876748261" class="btn-ghost text-xs">
+                <iconify-icon icon="solar:phone-calling-linear" width="16"></iconify-icon>
+                <span data-es="Llamar ahora" data-en="Call now">
+                  Llamar ahora
+                </span>
+              </a>
+              <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20recibir%20informaci%C3%B3n%20sobre%20sus%20servicios%20y%20disponibilidad%20para%20una%20cita." target="_blank" rel="noopener" class="btn-ghost text-xs js-wa">
+                <iconify-icon icon="solar:chat-round-dots-linear" width="16" class=""></iconify-icon>
+                <span data-es="Consultar por WhatsApp" data-en="Ask on WhatsApp" class="">
+                  Consultar por WhatsApp
+                </span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ════════ FINAL CTA ════════ -->
+      <section class="py-24 px-5 md:px-10 cv-auto">
+        <div class="max-w-[1240px] mx-auto bg-[#0D1530] rounded-[2.5rem] px-8 md:px-16 py-20 relative overflow-hidden text-center">
+          <div class="absolute -top-10 -left-10 w-60 h-60 bg-[#F50087]/15 rounded-full blur-3xl pointer-events-none"></div>
+          <div class="absolute -bottom-10 -right-10 w-60 h-60 bg-[#F5CE68]/10 rounded-full blur-3xl pointer-events-none"></div>
+          <div class="relative reveal">
+            <h2 class="font-display section-title font-medium text-white mb-5" data-es="Haz espacio para sentirte bien contigo." data-en="Make time to feel your best.">
+              Haz espacio para sentirte bien contigo.
+            </h2>
+            <p class="text-white/70 font-light max-w-xl mx-auto mb-9" data-es="Conoce nuestros tratamientos y comunícate con Princess Esthetics para recibir orientación personalizada." data-en="Discover our treatments and contact Princess Esthetics for personalized guidance.">
+              Conoce nuestros tratamientos y comunícate con Princess Esthetics
+              para recibir orientación personalizada.
+            </p>
+            <div class="flex flex-wrap gap-3 justify-center">
+              <a href="servicios.html" class="btn-primary">
+                <span data-es="Ver servicios y precios" data-en="View services and pricing" class="">
+                  Ver servicios y precios
+                </span>
+                <iconify-icon icon="solar:arrow-right-linear" width="18" class=""></iconify-icon>
+              </a>
+              <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20recibir%20informaci%C3%B3n%20sobre%20sus%20servicios%20y%20disponibilidad%20para%20una%20cita." target="_blank" rel="noopener" class="btn-ghost js-wa" style="background:rgba(255,255,255,0.1);color:#fff;border-color:rgba(255,255,255,0.2)">
+                <iconify-icon icon="solar:chat-round-dots-linear" width="18"></iconify-icon>
+                <span data-es="Consultar por WhatsApp" data-en="Ask on WhatsApp" class="">
+                  Consultar por WhatsApp
+                </span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- ════════ FOOTER ════════ -->
+    <footer class="bg-[#0D1530] text-white/70 pt-20 pb-28 md:pb-12 px-5 md:px-10 relative overflow-hidden">
+      <div class="absolute top-0 left-1/2 -translate-x-1/2 h-px w-3/4 bg-gradient-to-r from-transparent via-[#F5CE68]/40 to-transparent"></div>
+      <div class="max-w-[1240px] mx-auto grid md:grid-cols-4 gap-10 mb-12">
+        <div class="md:col-span-2">
+          <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/096923e3-18d0-458b-b81b-5b1471885ec7_800w.png" alt="Princess Esthetics" class="md:h-40 w-auto h-32 object-contain mb-5 -translate-y-2 scale-100" style="object-fit:contain" width="250" height="100">
+          <p class="text-sm font-light max-w-sm mb-6" data-es="Cuidado facial, corporal y estética avanzada en Canóvanas, Puerto Rico." data-en="Facial care, body treatments, and advanced aesthetics in Canóvanas, Puerto Rico.">
+            Cuidado facial, corporal y estética avanzada en Canóvanas, Puerto
+            Rico.
+          </p>
+          <div class="flex gap-3">
+            <a href="https://www.instagram.com/princessesthetic2?utm_source=qr" target="_blank" rel="noopener" aria-label="Instagram" class="w-10 h-10 rounded-full border border-white/15 flex items-center justify-center hover:bg-[#F50087] hover:border-[#F50087] transition-all">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="">
+                <rect width="20" height="20" x="2" y="2" rx="5" ry="5" class=""></rect>
+                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line>
+              </svg>
+            </a>
+            <a href="https://www.facebook.com/share/18wR4BrHV8/?mibextid=wwXIfr" target="_blank" rel="noopener" aria-label="Facebook" class="w-10 h-10 rounded-full border border-white/15 flex items-center justify-center hover:bg-[#F50087] hover:border-[#F50087] transition-all">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="">
+                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+              </svg>
+            </a>
+            <a href="mailto:princessestetics@yahoo.com" aria-label="Email" class="w-10 h-10 rounded-full border border-white/15 flex items-center justify-center hover:bg-[#F50087] hover:border-[#F50087] transition-all">
+              <iconify-icon icon="solar:letter-linear" width="18" class=""></iconify-icon>
+            </a>
+            <a href="https://www.google.com/maps/place/Princess+Esthetics/@18.3771834,-65.9041439,17z/data=!3m1!4b1!4m6!3m5!1s0x8c036128621884cb:0x1801ff99fe5c029d!8m2!3d18.3771834!4d-65.901569!16s%2Fg%2F11p6f9cdhx?entry=ttu&amp;g_ep=EgoyMDI2MDcwNi4wIKXMDSoASAFQAw%3D%3D" target="_blank" rel="noopener" aria-label="Google Maps" class="w-10 h-10 rounded-full border border-white/15 flex items-center justify-center hover:bg-[#F50087] hover:border-[#F50087] transition-all">
+              <iconify-icon icon="solar:map-point-linear" width="18"></iconify-icon>
+            </a>
+          </div>
+        </div>
+        <div class="">
+          <h3 class="text-xs uppercase tracking-[0.2em] text-white mb-5 font-semibold" data-es="Navegación" data-en="Navigation">
+            Navegación
+          </h3>
+          <ul class="space-y-3 text-sm font-light">
+            <li class="">
+              <a href="index.html" class="hover:text-white transition-colors" data-es="Inicio" data-en="Home">
+                Inicio
+              </a>
+            </li>
+            <li class="">
+              <a href="servicios.html" class="hover:text-white transition-colors" data-es="Servicios" data-en="Services">
+                Servicios
+              </a>
+            </li>
+            <li class="">
+              <a href="galeria.html" class="hover:text-white transition-colors" data-es="Galería" data-en="Gallery">
+                Galería
+              </a>
+            </li>
+            <li class="">
+              <a href="https://www.google.com/maps/place/Princess+Esthetics/@18.3771834,-65.9041439,17z/data=!3m1!4b1!4m6!3m5!1s0x8c036128621884cb:0x1801ff99fe5c029d!8m2!3d18.3771834!4d-65.901569!16s%2Fg%2F11p6f9cdhx?entry=ttu&amp;g_ep=EgoyMDI2MDcwNi4wIKXMDSoASAFQAw%3D%3D" class="hover:text-white transition-colors" data-es="Ubicación" data-en="Location">
+                Ubicación
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div class="">
+          <h3 class="text-xs uppercase tracking-[0.2em] text-white mb-5 font-semibold" data-es="Contacto" data-en="Contact">
+            Contacto
+          </h3>
+          <ul class="space-y-3 text-sm font-light">
+            <li class="">
+              <a href="tel:+17876748261" class="hover:text-white transition-colors flex items-center gap-2">
+                <iconify-icon icon="solar:phone-calling-linear" width="16" class=""></iconify-icon>
+                (787) 674-8261
+              </a>
+            </li>
+            <li class="">
+              <a href="mailto:princessestetics@yahoo.com" class="hover:text-white transition-colors flex items-center gap-2 break-all">
+                <iconify-icon icon="solar:letter-linear" width="16"></iconify-icon>
+                princessestetics@yahoo.com
+              </a>
+            </li>
+            <li class="flex items-start gap-2">
+              <iconify-icon icon="solar:map-point-linear" width="16" class="mt-0.5 shrink-0"></iconify-icon>
+              <span class="" onclick="window.location.href='https://www.google.com/maps/place/Princess+Esthetics/@18.3771834,-65.9041439,17z/data=!3m1!4b1!4m6!3m5!1s0x8c036128621884cb:0x1801ff99fe5c029d!8m2!3d18.3771834!4d-65.901569!16s%2Fg%2F11p6f9cdhx?entry=ttu&amp;g_ep=EgoyMDI2MDcwNi4wIKXMDSoASAFQAw%3D%3D'" role="button">
+                Edificio Multiusos, oficina PB, Canóvanas, PR 00729
+              </span>
+            </li>
+            <li class="flex items-start gap-2">
+              <iconify-icon icon="solar:clock-circle-linear" width="16" class="mt-0.5 shrink-0"></iconify-icon>
+              <span data-es="Martes a sábado, 7:00 a. m. a 7:00 p. m." data-en="Tuesday through Saturday, 7:00 a.m. to 7:00 p.m." class="">
+                Martes a sábado, 7:00 a. m. a 7:00 p. m.
+              </span>
+            </li>
+          </ul>
+          <div class="flex items-center gap-1 mt-5 text-sm font-semibold text-white" role="group" aria-label="Selector de idioma">
+            <button class="lang-btn active" data-lang="es" aria-label="Cambiar a español">
+              ES
+            </button>
+            <span class="text-white/30">|</span>
+            <button class="lang-btn" data-lang="en" aria-label="Switch to English">
+              EN
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="max-w-[1240px] mx-auto pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-3 text-xs text-white/50">
+        <span data-es="© 2026 Princess Esthetics. Todos los derechos reservados." data-en="© 2026 Princess Esthetics. All rights reserved." class="">
+          © 2026 Princess Esthetics. Todos los derechos reservados.
+        </span>
+        <span class="">Website by SC Web Studios</span>
+      </div>
+    </footer>
+
+    <!-- ════════ FLOATING MOBILE ACTION BAR ════════ -->
+    <div class="md:hidden fixed bottom-0 left-0 right-0 z-40 liquid-glass flex gap-3 px-4 pt-3" style="padding-bottom:calc(0.75rem + env(safe-area-inset-bottom))">
+      <a href="tel:+17876748261" class="flex-1 flex items-center justify-center gap-2 bg-[#0D1530] text-white rounded-full py-3 font-medium text-sm min-h-[44px]">
+        <iconify-icon icon="solar:phone-calling-linear" width="18" class=""></iconify-icon>
+        <span data-es="Llamar" data-en="Call" class="">Llamar</span>
+      </a>
+      <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20recibir%20informaci%C3%B3n%20sobre%20sus%20servicios%20y%20disponibilidad%20para%20una%20cita." target="_blank" rel="noopener" class="flex-1 flex items-center justify-center gap-2 bg-[#1FAE54] text-white rounded-full py-3 font-medium text-sm min-h-[44px] js-wa">
+        <iconify-icon icon="solar:chat-round-dots-linear" width="18"></iconify-icon>
+        WhatsApp
+      </a>
+    </div>
+
+    <script>
+      /* ===== Language System ===== */
+      (function(){
+        var KEY='princessLanguage';
+        var WA_NUM = '17876748261';
+
+        function generalWaLink(lang) {
+          var msg = lang === 'es'
+            ? 'Hola, me interesa recibir información sobre sus servicios y disponibilidad para una cita.'
+            : 'Hello, I would like information about your services and appointment availability.';
+          return 'https://wa.me/' + WA_NUM + '?text=' + encodeURIComponent(msg);
+        }
+
+        function serviceWaLink(serviceEs, serviceEn, lang) {
+          var service = lang === 'es' ? serviceEs : serviceEn;
+          var msg = lang === 'es'
+            ? 'Hola, me interesa el servicio de ' + service + '. ¿Podrían darme información y disponibilidad para una cita?'
+            : 'Hello, I am interested in the ' + service + ' service. Could you give me information and appointment availability?';
+          return 'https://wa.me/' + WA_NUM + '?text=' + encodeURIComponent(msg);
+        }
+
+        function updateWhatsAppLinks(lang) {
+          document.querySelectorAll('.js-wa').forEach(function(a) {
+            a.setAttribute('href', generalWaLink(lang));
+          });
+
+          document.querySelectorAll('.js-wa-service').forEach(function(a) {
+            var serviceEs = a.getAttribute('data-wa-service-es');
+            var serviceEn = a.getAttribute('data-wa-service-en');
+            if (serviceEs && serviceEn) {
+              a.setAttribute('href', serviceWaLink(serviceEs, serviceEn, lang));
+            }
+          });
+        }
+
+        function apply(lang){
+          document.documentElement.lang=lang;
+          document.querySelectorAll('[data-es]').forEach(function(el){
+            var t=el.getAttribute('data-'+lang);
+            if(t!==null) el.textContent=t;
+          });
+          updateWhatsAppLinks(lang);
+          document.querySelectorAll('.lang-btn').forEach(function(b){b.classList.toggle('active',b.getAttribute('data-lang')===lang);});
+          try{localStorage.setItem(KEY,lang);}catch(e){}
+        }
+        document.querySelectorAll('.lang-btn').forEach(function(b){
+          b.addEventListener('click',function(){apply(b.getAttribute('data-lang'));});
+        });
+        var saved='es';
+        try{saved=localStorage.getItem(KEY)||'es';}catch(e){}
+        apply(saved);
+      })();
+
+      /* ===== Mobile Menu ===== */
+      (function(){
+        var toggle=document.getElementById('menu-toggle');
+        var menu=document.getElementById('mobile-menu');
+        var icon=document.getElementById('menu-icon');
+        function close(){menu.classList.remove('open');toggle.setAttribute('aria-expanded','false');icon.setAttribute('icon','solar:hamburger-menu-linear');document.body.style.overflow='';}
+        toggle.addEventListener('click',function(){
+          var open=menu.classList.toggle('open');
+          toggle.setAttribute('aria-expanded',open?'true':'false');
+          icon.setAttribute('icon',open?'solar:close-circle-linear':'solar:hamburger-menu-linear');
+          document.body.style.overflow=open?'hidden':'';
+        });
+        document.querySelectorAll('.js-menu-link').forEach(function(l){
+          l.addEventListener('click', function(e){
+            var href = l.getAttribute('href') || '';
+            close();
+            if (href.startsWith('/')) {
+              e.preventDefault();
+              window.location.href = href;
+            }
+          });
+        });
+      })();
+
+      /* ===== Nav scroll effect ===== */
+      (function(){
+        var nav=document.getElementById('main-nav');
+        window.addEventListener('scroll',function(){
+          if(window.scrollY>30){nav.style.background='rgba(255,255,255,0.9)';nav.style.boxShadow='0 10px 40px rgba(13,21,48,0.12)';}
+          else{nav.style.background='';nav.style.boxShadow='';}
+        });
+      })();
+
+      /* ===== Reveal on scroll ===== */
+      (function(){
+        var obs=new IntersectionObserver(function(entries){
+          entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});
+        },{threshold:0.12});
+        document.querySelectorAll('.reveal').forEach(function(el){obs.observe(el);});
+      })();
+
+      /* ===== Counters ===== */
+      (function(){
+        var cObs=new IntersectionObserver(function(entries,o){
+          entries.forEach(function(e){
+            if(!e.isIntersecting)return;
+            var el=e.target,target=parseInt(el.getAttribute('data-count')),dur=1800,start=null;
+            function step(ts){if(!start)start=ts;var p=Math.min((ts-start)/dur,1);el.textContent=Math.floor(p*target);if(p<1)requestAnimationFrame(step);else el.textContent=target;}
+            requestAnimationFrame(step);o.unobserve(el);
+          });
+        },{threshold:0.5});
+        document.querySelectorAll('.counter').forEach(function(c){cObs.observe(c);});
+      })();
+    </script>
+  
+</body></html>
