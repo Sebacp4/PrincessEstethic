@@ -93,7 +93,7 @@ setPaused(event.data.paused);
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Servicios | Princess Esthetics — Canóvanas, Puerto Rico</title>
 <meta name="description" content="Explora los servicios de Princess Esthetics: faciales, tecnología avanzada, tratamientos corporales, láser diodo y depilación con cera en Canóvanas, PR.">
-<link rel="canonical" href="https://princessesthetics.com/servicio">
+<link rel="canonical" href="https://princessesthetics.com/servicios">
 <meta name="theme-color" content="#0D1530">
 <link rel="icon" href="/favicon.ico">
 <script src="https://cdn.tailwindcss.com"></script>
@@ -144,8 +144,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--fuchsia);outline-of
 .acc-body.open{max-height:1200px;}
 .acc-icon{transition:transform 0.4s ease;}
 .acc-trigger.open .acc-icon{transform:rotate(180deg);}
-/* Page transition: scale content only, not Unicorn background */
-#main-nav,
+/* Page transition: scale content only, not Unicorn background or fixed nav */
 main,
 footer,
 body > .md\:hidden.fixed.bottom-0 {
@@ -155,23 +154,40 @@ transition: opacity 420ms ease-in-out, transform 420ms ease-in-out;
 transform-origin: center top;
 will-change: opacity, transform;
 }
-body.page-ready #main-nav,
+#main-nav {
+opacity: 0;
+transition: opacity 420ms ease-in-out, background 500ms ease, box-shadow 500ms ease;
+}
 body.page-ready main,
 body.page-ready footer,
 body.page-ready > .md\:hidden.fixed.bottom-0 {
 opacity: 1;
 transform: scale(1);
 }
-body.page-exit #main-nav,
+body.page-ready #main-nav {
+opacity: 1;
+}
 body.page-exit main,
 body.page-exit footer,
 body.page-exit > .md\:hidden.fixed.bottom-0 {
 opacity: 0;
 transform: scale(0.975);
 }
+body.page-exit #main-nav {
+opacity: 0;
+}
 /* Keep Unicorn Studio background untouched */
 .aura-background-component {
 transform: none !important;
+}
+/* Desktop nav centering safety */
+@media (min-width: 768px) {
+#main-nav {
+left: 50% !important;
+right: auto !important;
+width: min(95%, 1240px) !important;
+transform: translateX(-50%) !important;
+}
 }
 @media (prefers-reduced-motion:reduce){
 *{animation:none!important;transition:none!important;scroll-behavior:auto!important;}
@@ -187,7 +203,7 @@ transform: none !important;
 "telephone":"+1-787-674-8261",
 "email":"princessestetics@yahoo.com",
 "address":{"@type":"PostalAddress","streetAddress":"Edificio Multiusos, segundo piso, oficina PB, 02 Cll Pepita Albandoz","addressLocality":"Canóvanas","addressRegion":"PR","postalCode":"00729","addressCountry":"PR"},
-"url":"https://princessesthetics.com/servicio"
+"url":"https://princessesthetics.com/servicios"
 }
 </script></head>
 
@@ -209,12 +225,24 @@ transform: none !important;
           <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/096923e3-18d0-458b-b81b-5b1471885ec7_800w.png" alt="Princess Esthetics" class="md:h-20 md:scale-125 origin-left w-auto h-16 object-contain translate-x-8 scale-[1.7]" style="object-fit:contain" width="160" height="48" onclick="window.location.href='index.html'" role="button">
         </a>
         <div class="hidden lg:flex items-center gap-8 text-sm font-medium text-[#25252D]">
-          <a href="index.html" class="nav-link" data-es="Inicio" data-en="Home">Inicio</a>
-          <a href="index.html#nosotros" class="nav-link" data-es="Nosotros" data-en="About">Nosotros</a>
-          <a href="/servicio" class="nav-link active" data-es="Servicios" data-en="Services">Servicios</a>
-          <a href="galeria.html" class="nav-link" data-es="Galería" data-en="Gallery">Galería</a>
-          <a href="index.html#testimonios" class="nav-link" data-es="Testimonios" data-en="Testimonials">Testimonios</a>
-          <a href="index.html#ubicacion" class="nav-link" data-es="Ubicación" data-en="Location">Ubicación</a>
+          <a href="index.html" class="nav-link" data-es="Inicio" data-en="Home">
+            Inicio
+          </a>
+          <a href="index.html#nosotros" class="nav-link" data-es="Nosotros" data-en="About">
+            Nosotros
+          </a>
+          <a href="servicios.html" class="nav-link active" data-es="Servicios" data-en="Services">
+            Servicios
+          </a>
+          <a href="galeria.html" class="nav-link" data-es="Galería" data-en="Gallery">
+            Galería
+          </a>
+          <a href="index.html#testimonios" class="nav-link" data-es="Testimonios" data-en="Testimonials">
+            Testimonios
+          </a>
+          <a href="index.html#ubicacion" class="nav-link" data-es="Ubicación" data-en="Location">
+            Ubicación
+          </a>
         </div>
         <div class="flex items-center gap-3 md:gap-4">
           <div class="flex items-center gap-1 text-sm font-semibold text-[#25252D]" role="group" aria-label="Selector de idioma">
@@ -226,7 +254,9 @@ transform: none !important;
               EN
             </button>
           </div>
-          <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20recibir%20informaci%C3%B3n%20sobre%20sus%20servicios%20y%20disponibilidad%20para%20una%20cita." target="_blank" rel="noopener" class="hidden md:inline-flex btn-primary py-2.5 px-5 text-xs js-wa" data-es="Consultar" data-en="Contact us">Consultar</a>
+          <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20recibir%20informaci%C3%B3n%20sobre%20sus%20servicios%20y%20disponibilidad%20para%20una%20cita." target="_blank" rel="noopener" class="hidden md:inline-flex btn-primary py-2.5 px-5 text-xs js-wa" data-es="Consultar" data-en="Contact us">
+            Consultar
+          </a>
           <button id="menu-toggle" class="lg:hidden text-[#0D1530] p-2" aria-label="Abrir menú" aria-expanded="false" aria-controls="mobile-menu">
             <iconify-icon id="menu-icon" icon="solar:hamburger-menu-linear" width="26"></iconify-icon>
           </button>
@@ -234,13 +264,27 @@ transform: none !important;
       </div>
       <div id="mobile-menu" class="lg:hidden px-5">
         <div class="flex flex-col gap-1 py-4 border-t border-[#0D1530]/10 text-[#25252D] font-medium">
-          <a href="index.html" class="py-3 js-menu-link" data-es="Inicio" data-en="Home">Inicio</a>
-          <a href="index.html#nosotros" class="py-3 js-menu-link" data-es="Nosotros" data-en="About">Nosotros</a>
-          <a href="/servicio" class="py-3 js-menu-link text-[#F50087]" data-es="Servicios" data-en="Services">Servicios</a>
-          <a href="galeria.html" class="py-3 js-menu-link" data-es="Galería" data-en="Gallery">Galería</a>
-          <a href="index.html#testimonios" class="py-3 js-menu-link" data-es="Testimonios" data-en="Testimonials">Testimonios</a>
-          <a href="index.html#ubicacion" class="py-3 js-menu-link" data-es="Ubicación" data-en="Location">Ubicación</a>
-          <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20recibir%20informaci%C3%B3n%20sobre%20sus%20servicios%20y%20disponibilidad%20para%20una%20cita." target="_blank" rel="noopener" class="btn-primary mt-3 js-wa js-menu-link" data-es="Consultar" data-en="Contact us">Consultar</a>
+          <a href="index.html" class="py-3 js-menu-link" data-es="Inicio" data-en="Home">
+            Inicio
+          </a>
+          <a href="index.html#nosotros" class="py-3 js-menu-link" data-es="Nosotros" data-en="About">
+            Nosotros
+          </a>
+          <a href="servicios.html" class="py-3 js-menu-link text-[#F50087]" data-es="Servicios" data-en="Services">
+            Servicios
+          </a>
+          <a href="galeria.html" class="py-3 js-menu-link" data-es="Galería" data-en="Gallery">
+            Galería
+          </a>
+          <a href="index.html#testimonios" class="py-3 js-menu-link" data-es="Testimonios" data-en="Testimonials">
+            Testimonios
+          </a>
+          <a href="index.html#ubicacion" class="py-3 js-menu-link" data-es="Ubicación" data-en="Location">
+            Ubicación
+          </a>
+          <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20recibir%20informaci%C3%B3n%20sobre%20sus%20servicios%20y%20disponibilidad%20para%20una%20cita." target="_blank" rel="noopener" class="btn-primary mt-3 js-wa js-menu-link" data-es="Consultar" data-en="Contact us">
+            Consultar
+          </a>
         </div>
       </div>
     </nav>
@@ -252,11 +296,19 @@ transform: none !important;
         <div class="absolute bottom-10 right-10 w-40 h-40 rounded-full bg-[#F50087]/5 blur-3xl pointer-events-none"></div>
         <div class="max-w-[1240px] mx-auto text-center">
           <span class="reveal inline-flex items-center gap-2 text-[11px] tracking-[0.25em] font-semibold text-[#F50087] mb-6 visible"></span>
-          <h1 class="reveal d100 font-display hero-title font-medium text-[#0D1530] mb-6 max-w-3xl mx-auto visible" data-es="Servicios diseñados para cuidar de ti." data-en="Services designed to care for you.">Servicios diseñados para cuidar de ti.</h1>
-          <p class="reveal d200 text-[#25252D]/70 font-light max-w-2xl mx-auto mb-8 leading-relaxed visible" data-es="Explora nuestros tratamientos faciales, corporales, tecnología estética, láser diodo y depilación con cera." data-en="Explore our facial treatments, body treatments, aesthetic technology, diode laser, and waxing services.">Explora nuestros tratamientos faciales, corporales, tecnología estética, láser diodo y depilación con cera.</p>
+          <h1 class="reveal d100 font-display hero-title font-medium text-[#0D1530] mb-6 max-w-3xl mx-auto visible" data-es="Servicios diseñados para cuidar de ti." data-en="Services designed to care for you.">
+            Servicios diseñados para cuidar de ti.
+          </h1>
+          <p class="reveal d200 text-[#25252D]/70 font-light max-w-2xl mx-auto mb-8 leading-relaxed visible" data-es="Explora nuestros tratamientos faciales, corporales, tecnología estética, láser diodo y depilación con cera." data-en="Explore our facial treatments, body treatments, aesthetic technology, diode laser, and waxing services.">
+            Explora nuestros tratamientos faciales, corporales, tecnología
+            estética, láser diodo y depilación con cera.
+          </p>
           <div class="reveal d300 liquid-glass rounded-2xl px-5 py-4 flex items-start gap-3 max-w-2xl mx-auto text-left visible">
             <iconify-icon icon="solar:shield-check-linear" width="22" class="text-[#F50087] mt-0.5 shrink-0"></iconify-icon>
-            <p class="text-sm font-medium text-[#0D1530]" data-es="Los servicios se coordinan mediante cita previa y se requiere un depósito para confirmar el espacio." data-en="Services are scheduled by appointment, and a deposit is required to confirm the appointment.">Los servicios se coordinan mediante cita previa y se requiere un depósito para confirmar el espacio.</p>
+            <p class="text-sm font-medium text-[#0D1530]" data-es="Los servicios se coordinan mediante cita previa y se requiere un depósito para confirmar el espacio." data-en="Services are scheduled by appointment, and a deposit is required to confirm the appointment.">
+              Los servicios se coordinan mediante cita previa y se requiere un
+              depósito para confirmar el espacio.
+            </p>
           </div>
         </div>
       </header>
@@ -267,11 +319,15 @@ transform: none !important;
           <div class="flex flex-nowrap items-center md:justify-center gap-2 md:gap-3 overflow-x-auto hide-scrollbar scroll-smooth px-5 md:px-2 w-full">
             <a href="#faciales" class="cat-pill min-h-[44px] shrink-0" data-cat="faciales">
               <iconify-icon icon="solar:heart-linear" width="16" class=""></iconify-icon>
-              <span data-es="Faciales" data-en="Facials" class="">Faciales</span>
+              <span data-es="Faciales" data-en="Facials" class="">
+                Faciales
+              </span>
             </a>
             <a href="#tecnologia" class="cat-pill min-h-[44px] shrink-0" data-cat="tecnologia">
               <iconify-icon icon="solar:stars-linear" width="16" class=""></iconify-icon>
-              <span data-es="Tecnología avanzada" data-en="Advanced Tech" class="">Tecnología avanzada</span>
+              <span data-es="Tecnología avanzada" data-en="Advanced Tech" class="">
+                Tecnología avanzada
+              </span>
             </a>
             <a href="#corporales" class="cat-pill min-h-[44px] shrink-0" data-cat="corporales">
               <iconify-icon icon="solar:hand-heart-linear" width="16"></iconify-icon>
@@ -279,11 +335,15 @@ transform: none !important;
             </a>
             <a href="#laser" class="cat-pill min-h-[44px] shrink-0" data-cat="laser">
               <iconify-icon icon="solar:bolt-linear" width="16"></iconify-icon>
-              <span data-es="Láser diodo" data-en="Diode Laser" class="">Láser diodo</span>
+              <span data-es="Láser diodo" data-en="Diode Laser" class="">
+                Láser diodo
+              </span>
             </a>
             <a href="#cera" class="cat-pill min-h-[44px] shrink-0" data-cat="cera">
               <iconify-icon icon="solar:leaf-linear" width="16"></iconify-icon>
-              <span data-es="Depilación con cera" data-en="Waxing" class="">Depilación con cera</span>
+              <span data-es="Depilación con cera" data-en="Waxing" class="">
+                Depilación con cera
+              </span>
             </a>
           </div>
         </div>
@@ -295,9 +355,13 @@ transform: none !important;
           <div class="mb-12 reveal visible">
             <span class="text-[11px] tracking-[0.25em] font-semibold text-[#F50087] flex items-center gap-2">
               <iconify-icon icon="solar:heart-linear" width="16" class="text-[#F5CE68]"></iconify-icon>
-              <span data-es="CUIDADO FACIAL" data-en="FACIAL CARE">CUIDADO FACIAL</span>
+              <span data-es="CUIDADO FACIAL" data-en="FACIAL CARE">
+                CUIDADO FACIAL
+              </span>
             </span>
-            <h2 class="font-display section-title font-medium text-[#0D1530] mt-3" data-es="Faciales" data-en="Facial Treatments">Faciales</h2>
+            <h2 class="font-display section-title font-medium text-[#0D1530] mt-3" data-es="Faciales" data-en="Facial Treatments">
+              Faciales
+            </h2>
             <div class="gold-line w-40 mt-5"></div>
           </div>
           <div class="grid grid-cols-2 max-[359px]:grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-5" data-cards="">
@@ -307,13 +371,19 @@ transform: none !important;
               </div>
               <div class="p-3 md:p-4 lg:p-5 flex flex-col flex-1">
                 <div class="flex flex-col gap-0.5 mb-1.5">
-                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="Limpieza Facial Express" data-en="Express Facial Cleansing">Limpieza Facial Express</h3>
+                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="Limpieza Facial Express" data-en="Express Facial Cleansing">
+                    Limpieza Facial Express
+                  </h3>
                   <span class="font-display text-lg md:text-xl font-semibold text-[#F50087]">
                     $49
                   </span>
                 </div>
-                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3" data-es="Limpieza facial rápida que refresca y revitaliza tu piel." data-en="A quick facial cleansing that refreshes and revitalizes your skin.">Limpieza facial rápida que refresca y revitaliza tu piel.</p>
-                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Limpieza%20Facial%20Express.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all js-card-wa" data-es="Consultar" data-en="Inquire">Consultar</a>
+                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3" data-es="Limpieza facial rápida que refresca y revitaliza tu piel." data-en="A quick facial cleansing that refreshes and revitalizes your skin.">
+                  Limpieza facial rápida que refresca y revitaliza tu piel.
+                </p>
+                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Limpieza%20Facial%20Express.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all js-card-wa" data-es="Consultar" data-en="Inquire">
+                  Consultar
+                </a>
               </div>
             </div>
             <div class="card-hover bg-white rounded-2xl md:rounded-[1.5rem] border border-[#FFD6E3]/60 shadow-sm flex flex-col h-full overflow-hidden" data-name-es="Limpieza Facial Profunda" data-name-en="Deep Facial Cleansing">
@@ -322,13 +392,19 @@ transform: none !important;
               </div>
               <div class="p-3 md:p-4 lg:p-5 flex flex-col flex-1">
                 <div class="flex flex-col gap-0.5 mb-1.5">
-                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="Limpieza Facial Profunda" data-en="Deep Facial Cleansing">Limpieza Facial Profunda</h3>
+                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="Limpieza Facial Profunda" data-en="Deep Facial Cleansing">
+                    Limpieza Facial Profunda
+                  </h3>
                   <span class="font-display text-lg md:text-xl font-semibold text-[#F50087]">
                     $65
                   </span>
                 </div>
-                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3" data-es="Limpieza profunda para una piel más limpia y luminosa." data-en="Deep cleansing for cleaner, more radiant-looking skin.">Limpieza profunda para una piel más limpia y luminosa.</p>
-                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Limpieza%20Facial%20Profunda.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all js-card-wa" data-es="Consultar" data-en="Inquire">Consultar</a>
+                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3" data-es="Limpieza profunda para una piel más limpia y luminosa." data-en="Deep cleansing for cleaner, more radiant-looking skin.">
+                  Limpieza profunda para una piel más limpia y luminosa.
+                </p>
+                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Limpieza%20Facial%20Profunda.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all js-card-wa" data-es="Consultar" data-en="Inquire">
+                  Consultar
+                </a>
               </div>
             </div>
             <div class="card-hover bg-white rounded-2xl md:rounded-[1.5rem] border border-[#FFD6E3]/60 shadow-sm flex flex-col h-full overflow-hidden" data-name-es="Booty Facial" data-name-en="Booty Facial">
@@ -337,13 +413,20 @@ transform: none !important;
               </div>
               <div class="p-3 md:p-4 lg:p-5 flex flex-col flex-1">
                 <div class="flex flex-col gap-0.5 mb-1.5">
-                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="Booty Facial" data-en="Booty Facial">Booty Facial</h3>
+                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="Booty Facial" data-en="Booty Facial">
+                    Booty Facial
+                  </h3>
                   <span class="font-display text-lg md:text-xl font-semibold text-[#F50087]">
                     $75
                   </span>
                 </div>
-                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3" data-es="Tratamiento de limpieza e hidratación para la piel del área glútea." data-en="Cleansing and hydrating treatment for the skin of the glute area.">Tratamiento de limpieza e hidratación para la piel del área glútea.</p>
-                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Booty%20Facial.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all js-card-wa" data-es="Consultar" data-en="Inquire">Consultar</a>
+                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3" data-es="Tratamiento de limpieza e hidratación para la piel del área glútea." data-en="Cleansing and hydrating treatment for the skin of the glute area.">
+                  Tratamiento de limpieza e hidratación para la piel del área
+                  glútea.
+                </p>
+                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Booty%20Facial.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all js-card-wa" data-es="Consultar" data-en="Inquire">
+                  Consultar
+                </a>
               </div>
             </div>
             <div class="card-hover bg-white rounded-2xl md:rounded-[1.5rem] border border-[#FFD6E3]/60 shadow-sm flex flex-col h-full overflow-hidden" data-name-es="Espalda Facial" data-name-en="Back Facial">
@@ -352,13 +435,19 @@ transform: none !important;
               </div>
               <div class="p-3 md:p-4 lg:p-5 flex flex-col flex-1">
                 <div class="flex flex-col gap-0.5 mb-1.5">
-                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="Espalda Facial" data-en="Back Facial">Espalda Facial</h3>
+                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="Espalda Facial" data-en="Back Facial">
+                    Espalda Facial
+                  </h3>
                   <span class="font-display text-lg md:text-xl font-semibold text-[#F50087]">
                     $85
                   </span>
                 </div>
-                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3" data-es="Limpieza e hidratación profesional para la piel de la espalda." data-en="Professional cleansing and hydration for the skin of the back.">Limpieza e hidratación profesional para la piel de la espalda.</p>
-                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Espalda%20Facial.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all js-card-wa" data-es="Consultar" data-en="Inquire">Consultar</a>
+                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3" data-es="Limpieza e hidratación profesional para la piel de la espalda." data-en="Professional cleansing and hydration for the skin of the back.">
+                  Limpieza e hidratación profesional para la piel de la espalda.
+                </p>
+                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Espalda%20Facial.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all js-card-wa" data-es="Consultar" data-en="Inquire">
+                  Consultar
+                </a>
               </div>
             </div>
             <div class="card-hover bg-white rounded-2xl md:rounded-[1.5rem] border border-[#FFD6E3]/60 shadow-sm flex flex-col h-full overflow-hidden" data-name-es="Facial Hidratante" data-name-en="Hydrating Facial">
@@ -367,13 +456,19 @@ transform: none !important;
               </div>
               <div class="p-3 md:p-4 lg:p-5 flex flex-col flex-1">
                 <div class="flex flex-col gap-0.5 mb-1.5">
-                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="Facial Hidratante" data-en="Hydrating Facial">Facial Hidratante</h3>
+                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="Facial Hidratante" data-en="Hydrating Facial">
+                    Facial Hidratante
+                  </h3>
                   <span class="font-display text-lg md:text-xl font-semibold text-[#F50087]">
                     $55
                   </span>
                 </div>
-                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3" data-es="Aporta hidratación y suavidad para una piel más confortable." data-en="Provides hydration and softness for more comfortable-feeling skin.">Aporta hidratación y suavidad para una piel más confortable.</p>
-                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Facial%20Hidratante.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all js-card-wa" data-es="Consultar" data-en="Inquire">Consultar</a>
+                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3" data-es="Aporta hidratación y suavidad para una piel más confortable." data-en="Provides hydration and softness for more comfortable-feeling skin.">
+                  Aporta hidratación y suavidad para una piel más confortable.
+                </p>
+                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Facial%20Hidratante.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all js-card-wa" data-es="Consultar" data-en="Inquire">
+                  Consultar
+                </a>
               </div>
             </div>
             <div class="card-hover bg-white rounded-2xl md:rounded-[1.5rem] border border-[#FFD6E3]/60 shadow-sm flex flex-col h-full overflow-hidden" data-name-es="Facial Antiacné" data-name-en="Acne-Care Facial">
@@ -382,13 +477,19 @@ transform: none !important;
               </div>
               <div class="p-3 md:p-4 lg:p-5 flex flex-col flex-1">
                 <div class="flex flex-col gap-0.5 mb-1.5">
-                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="Facial Antiacné" data-en="Acne-Care Facial">Facial Antiacné</h3>
+                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="Facial Antiacné" data-en="Acne-Care Facial">
+                    Facial Antiacné
+                  </h3>
                   <span class="font-display text-lg md:text-xl font-semibold text-[#F50087]">
                     $75
                   </span>
                 </div>
-                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3" data-es="Cuidado facial enfocado en pieles con tendencia acneica." data-en="Facial care focused on acne-prone skin types.">Cuidado facial enfocado en pieles con tendencia acneica.</p>
-                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Facial%20Antiacn%C3%A9.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all js-card-wa" data-es="Consultar" data-en="Inquire">Consultar</a>
+                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3" data-es="Cuidado facial enfocado en pieles con tendencia acneica." data-en="Facial care focused on acne-prone skin types.">
+                  Cuidado facial enfocado en pieles con tendencia acneica.
+                </p>
+                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Facial%20Antiacn%C3%A9.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all js-card-wa" data-es="Consultar" data-en="Inquire">
+                  Consultar
+                </a>
               </div>
             </div>
             <div class="card-hover bg-white rounded-2xl md:rounded-[1.5rem] border border-[#FFD6E3]/60 shadow-sm flex flex-col h-full overflow-hidden" data-name-es="Facial Antiedad" data-name-en="Age-Defying Facial">
@@ -397,13 +498,20 @@ transform: none !important;
               </div>
               <div class="p-3 md:p-4 lg:p-5 flex flex-col flex-1">
                 <div class="flex flex-col gap-0.5 mb-1.5">
-                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="Facial Antiedad" data-en="Age-Defying Facial">Facial Antiedad</h3>
+                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="Facial Antiedad" data-en="Age-Defying Facial">
+                    Facial Antiedad
+                  </h3>
                   <span class="font-display text-lg md:text-xl font-semibold text-[#F50087]">
                     $75
                   </span>
                 </div>
-                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3" data-es="Tratamiento que ayuda a mejorar la apariencia y firmeza de la piel." data-en="A treatment that helps improve the appearance and firmness of the skin.">Tratamiento que ayuda a mejorar la apariencia y firmeza de la piel.</p>
-                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Facial%20Antiedad.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all js-card-wa" data-es="Consultar" data-en="Inquire">Consultar</a>
+                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3" data-es="Tratamiento que ayuda a mejorar la apariencia y firmeza de la piel." data-en="A treatment that helps improve the appearance and firmness of the skin.">
+                  Tratamiento que ayuda a mejorar la apariencia y firmeza de la
+                  piel.
+                </p>
+                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Facial%20Antiedad.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all js-card-wa" data-es="Consultar" data-en="Inquire">
+                  Consultar
+                </a>
               </div>
             </div>
             <div class="card-hover bg-white rounded-2xl md:rounded-[1.5rem] border border-[#FFD6E3]/60 shadow-sm flex flex-col h-full overflow-hidden" data-name-es="Facial Despigmentante" data-name-en="Brightening Facial">
@@ -412,13 +520,20 @@ transform: none !important;
               </div>
               <div class="p-3 md:p-4 lg:p-5 flex flex-col flex-1">
                 <div class="flex flex-col gap-0.5 mb-1.5">
-                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="Facial Despigmentante" data-en="Brightening Facial">Facial Despigmentante</h3>
+                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="Facial Despigmentante" data-en="Brightening Facial">
+                    Facial Despigmentante
+                  </h3>
                   <span class="font-display text-lg md:text-xl font-semibold text-[#F50087]">
                     $75
                   </span>
                 </div>
-                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3" data-es="Cuidado enfocado en mejorar la luminosidad y uniformidad del tono." data-en="Care focused on improving radiance and a more even-looking tone.">Cuidado enfocado en mejorar la luminosidad y uniformidad del tono.</p>
-                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Facial%20Despigmentante.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all js-card-wa" data-es="Consultar" data-en="Inquire">Consultar</a>
+                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3" data-es="Cuidado enfocado en mejorar la luminosidad y uniformidad del tono." data-en="Care focused on improving radiance and a more even-looking tone.">
+                  Cuidado enfocado en mejorar la luminosidad y uniformidad del
+                  tono.
+                </p>
+                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Facial%20Despigmentante.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all js-card-wa" data-es="Consultar" data-en="Inquire">
+                  Consultar
+                </a>
               </div>
             </div>
             <div class="card-hover bg-white rounded-2xl md:rounded-[1.5rem] border border-[#FFD6E3]/60 shadow-sm flex flex-col h-full overflow-hidden" data-name-es="Dermaplaning" data-name-en="Dermaplaning">
@@ -427,13 +542,19 @@ transform: none !important;
               </div>
               <div class="p-3 md:p-4 lg:p-5 flex flex-col flex-1">
                 <div class="flex flex-col gap-0.5 mb-1.5">
-                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="Dermaplaning" data-en="Dermaplaning">Dermaplaning</h3>
+                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="Dermaplaning" data-en="Dermaplaning">
+                    Dermaplaning
+                  </h3>
                   <span class="font-display text-lg md:text-xl font-semibold text-[#F50087]">
                     $75
                   </span>
                 </div>
-                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3" data-es="Exfoliación que deja la piel suave y con apariencia renovada." data-en="Exfoliation that leaves the skin smooth with a renewed appearance.">Exfoliación que deja la piel suave y con apariencia renovada.</p>
-                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Dermaplaning.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all js-card-wa" data-es="Consultar" data-en="Inquire">Consultar</a>
+                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3" data-es="Exfoliación que deja la piel suave y con apariencia renovada." data-en="Exfoliation that leaves the skin smooth with a renewed appearance.">
+                  Exfoliación que deja la piel suave y con apariencia renovada.
+                </p>
+                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Dermaplaning.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all js-card-wa" data-es="Consultar" data-en="Inquire">
+                  Consultar
+                </a>
               </div>
             </div>
             <div class="card-hover bg-white rounded-2xl md:rounded-[1.5rem] border border-[#FFD6E3]/60 shadow-sm flex flex-col h-full overflow-hidden" data-name-es="Oxigenoterapia Facial" data-name-en="Oxygen Facial Therapy">
@@ -442,13 +563,19 @@ transform: none !important;
               </div>
               <div class="p-3 md:p-4 lg:p-5 flex flex-col flex-1">
                 <div class="flex flex-col gap-0.5 mb-1.5">
-                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="Oxigenoterapia Facial" data-en="Oxygen Facial Therapy">Oxigenoterapia Facial</h3>
+                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="Oxigenoterapia Facial" data-en="Oxygen Facial Therapy">
+                    Oxigenoterapia Facial
+                  </h3>
                   <span class="font-display text-lg md:text-xl font-semibold text-[#F50087]">
                     $75
                   </span>
                 </div>
-                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3" data-es="Tratamiento que aporta frescura y vitalidad al rostro." data-en="A treatment that brings freshness and vitality to the face.">Tratamiento que aporta frescura y vitalidad al rostro.</p>
-                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Oxigenoterapia%20Facial.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all js-card-wa" data-es="Consultar" data-en="Inquire">Consultar</a>
+                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3" data-es="Tratamiento que aporta frescura y vitalidad al rostro." data-en="A treatment that brings freshness and vitality to the face.">
+                  Tratamiento que aporta frescura y vitalidad al rostro.
+                </p>
+                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Oxigenoterapia%20Facial.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all js-card-wa" data-es="Consultar" data-en="Inquire">
+                  Consultar
+                </a>
               </div>
             </div>
           </div>
@@ -461,9 +588,13 @@ transform: none !important;
           <div class="mb-12 reveal">
             <span class="text-[11px] tracking-[0.25em] font-semibold text-[#F50087] flex items-center gap-2">
               <iconify-icon icon="solar:stars-linear" width="16" class="text-[#F5CE68]"></iconify-icon>
-              <span data-es="ESTÉTICA AVANZADA" data-en="ADVANCED AESTHETICS">ESTÉTICA AVANZADA</span>
+              <span data-es="ESTÉTICA AVANZADA" data-en="ADVANCED AESTHETICS">
+                ESTÉTICA AVANZADA
+              </span>
             </span>
-            <h2 class="font-display section-title font-medium text-[#0D1530] mt-3" data-es="Tecnología avanzada" data-en="Advanced Aesthetics">Tecnología avanzada</h2>
+            <h2 class="font-display section-title font-medium text-[#0D1530] mt-3" data-es="Tecnología avanzada" data-en="Advanced Aesthetics">
+              Tecnología avanzada
+            </h2>
             <div class="gold-line w-40 mt-5"></div>
           </div>
           <div class="grid grid-cols-2 max-[359px]:grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-5" data-cards="">
@@ -473,13 +604,19 @@ transform: none !important;
               </div>
               <div class="p-3 md:p-4 lg:p-5 flex flex-col flex-1">
                 <div class="flex flex-col gap-0.5 mb-1.5">
-                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="Dermapen" data-en="Dermapen">Dermapen</h3>
+                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="Dermapen" data-en="Dermapen">
+                    Dermapen
+                  </h3>
                   <span class="font-display text-lg md:text-xl font-semibold text-[#F50087]">
                     $75
                   </span>
                 </div>
-                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3" data-es="Tratamiento facial con tecnología de microagujas." data-en="Facial treatment using microneedling technology.">Tratamiento facial con tecnología de microagujas.</p>
-                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Dermapen.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all js-card-wa" data-es="Consultar" data-en="Inquire">Consultar</a>
+                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3" data-es="Tratamiento facial con tecnología de microagujas." data-en="Facial treatment using microneedling technology.">
+                  Tratamiento facial con tecnología de microagujas.
+                </p>
+                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Dermapen.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all js-card-wa" data-es="Consultar" data-en="Inquire">
+                  Consultar
+                </a>
               </div>
             </div>
             <div class="card-hover bg-white rounded-2xl md:rounded-[1.5rem] border border-[#FFD6E3]/60 shadow-sm flex flex-col h-full overflow-hidden" data-name-es="HIFU Facial" data-name-en="HIFU Facial">
@@ -488,13 +625,19 @@ transform: none !important;
               </div>
               <div class="p-3 md:p-4 lg:p-5 flex flex-col flex-1">
                 <div class="flex flex-col gap-0.5 mb-1.5">
-                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="HIFU Facial" data-en="HIFU Facial">HIFU Facial</h3>
+                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="HIFU Facial" data-en="HIFU Facial">
+                    HIFU Facial
+                  </h3>
                   <span class="font-display text-lg md:text-xl font-semibold text-[#F50087]">
                     $95
                   </span>
                 </div>
-                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3" data-es="Tecnología de ultrasonido enfocada para el cuidado facial." data-en="Focused ultrasound technology for facial care.">Tecnología de ultrasonido enfocada para el cuidado facial.</p>
-                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20HIFU%20Facial.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all js-card-wa" data-es="Consultar" data-en="Inquire">Consultar</a>
+                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3" data-es="Tecnología de ultrasonido enfocada para el cuidado facial." data-en="Focused ultrasound technology for facial care.">
+                  Tecnología de ultrasonido enfocada para el cuidado facial.
+                </p>
+                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20HIFU%20Facial.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all js-card-wa" data-es="Consultar" data-en="Inquire">
+                  Consultar
+                </a>
               </div>
             </div>
             <div class="card-hover bg-white rounded-2xl md:rounded-[1.5rem] border border-[#FFD6E3]/60 shadow-sm flex flex-col h-full overflow-hidden" data-name-es="Morpheus8" data-name-en="Morpheus8">
@@ -503,13 +646,19 @@ transform: none !important;
               </div>
               <div class="p-3 md:p-4 lg:p-5 flex flex-col flex-1">
                 <div class="flex flex-col gap-0.5 mb-1.5">
-                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="Morpheus8" data-en="Morpheus8">Morpheus8</h3>
+                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="Morpheus8" data-en="Morpheus8">
+                    Morpheus8
+                  </h3>
                   <span class="font-display text-lg md:text-xl font-semibold text-[#F50087]">
                     $195
                   </span>
                 </div>
-                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3" data-es="Tecnología avanzada combinada para el cuidado de la piel." data-en="Advanced combined technology for skin care.">Tecnología avanzada combinada para el cuidado de la piel.</p>
-                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Morpheus8.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all js-card-wa" data-es="Consultar" data-en="Inquire">Consultar</a>
+                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3" data-es="Tecnología avanzada combinada para el cuidado de la piel." data-en="Advanced combined technology for skin care.">
+                  Tecnología avanzada combinada para el cuidado de la piel.
+                </p>
+                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Morpheus8.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all js-card-wa" data-es="Consultar" data-en="Inquire">
+                  Consultar
+                </a>
               </div>
             </div>
             <div class="card-hover bg-white rounded-2xl md:rounded-[1.5rem] border border-[#FFD6E3]/60 shadow-sm flex flex-col h-full overflow-hidden" data-name-es="Microdermoabrasión" data-name-en="Microdermabrasion">
@@ -518,13 +667,19 @@ transform: none !important;
               </div>
               <div class="p-3 md:p-4 lg:p-5 flex flex-col flex-1">
                 <div class="flex flex-col gap-0.5 mb-1.5">
-                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="Microdermoabrasión" data-en="Microdermabrasion">Microdermoabrasión</h3>
+                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="Microdermoabrasión" data-en="Microdermabrasion">
+                    Microdermoabrasión
+                  </h3>
                   <span class="font-display text-lg md:text-xl font-semibold text-[#F50087]">
                     $55
                   </span>
                 </div>
-                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3" data-es="Exfoliación mecánica que renueva la superficie de la piel." data-en="Mechanical exfoliation that renews the skin surface.">Exfoliación mecánica que renueva la superficie de la piel.</p>
-                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Microdermoabrasi%C3%B3n.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all js-card-wa" data-es="Consultar" data-en="Inquire">Consultar</a>
+                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3" data-es="Exfoliación mecánica que renueva la superficie de la piel." data-en="Mechanical exfoliation that renews the skin surface.">
+                  Exfoliación mecánica que renueva la superficie de la piel.
+                </p>
+                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Microdermoabrasi%C3%B3n.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all js-card-wa" data-es="Consultar" data-en="Inquire">
+                  Consultar
+                </a>
               </div>
             </div>
             <div class="card-hover bg-white rounded-2xl md:rounded-[1.5rem] border border-[#FFD6E3]/60 shadow-sm flex flex-col h-full overflow-hidden" data-name-es="Radiofrecuencia Facial" data-name-en="Facial Radiofrequency">
@@ -533,13 +688,19 @@ transform: none !important;
               </div>
               <div class="p-3 md:p-4 lg:p-5 flex flex-col flex-1">
                 <div class="flex flex-col gap-0.5 mb-1.5">
-                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="Radiofrecuencia Facial" data-en="Facial Radiofrequency">Radiofrecuencia Facial</h3>
+                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="Radiofrecuencia Facial" data-en="Facial Radiofrequency">
+                    Radiofrecuencia Facial
+                  </h3>
                   <span class="font-display text-lg md:text-xl font-semibold text-[#F50087]">
                     $55
                   </span>
                 </div>
-                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3" data-es="Tecnología de radiofrecuencia para el cuidado facial." data-en="Radiofrequency technology for facial care.">Tecnología de radiofrecuencia para el cuidado facial.</p>
-                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Radiofrecuencia%20Facial.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all js-card-wa" data-es="Consultar" data-en="Inquire">Consultar</a>
+                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3" data-es="Tecnología de radiofrecuencia para el cuidado facial." data-en="Radiofrequency technology for facial care.">
+                  Tecnología de radiofrecuencia para el cuidado facial.
+                </p>
+                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Radiofrecuencia%20Facial.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all js-card-wa" data-es="Consultar" data-en="Inquire">
+                  Consultar
+                </a>
               </div>
             </div>
             <div class="card-hover bg-white rounded-2xl md:rounded-[1.5rem] border border-[#FFD6E3]/60 shadow-sm flex flex-col h-full overflow-hidden" data-name-es="Terapia LED" data-name-en="LED Light Therapy">
@@ -548,13 +709,19 @@ transform: none !important;
               </div>
               <div class="p-3 md:p-4 lg:p-5 flex flex-col flex-1">
                 <div class="flex flex-col gap-0.5 mb-1.5">
-                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="Terapia LED" data-en="LED Light Therapy">Terapia LED</h3>
+                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="Terapia LED" data-en="LED Light Therapy">
+                    Terapia LED
+                  </h3>
                   <span class="font-display text-lg md:text-xl font-semibold text-[#F50087]">
                     $55
                   </span>
                 </div>
-                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3" data-es="Sesión de luz LED como complemento del cuidado facial." data-en="LED light session as a complement to facial care.">Sesión de luz LED como complemento del cuidado facial.</p>
-                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Terapia%20LED.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all js-card-wa" data-es="Consultar" data-en="Inquire">Consultar</a>
+                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3" data-es="Sesión de luz LED como complemento del cuidado facial." data-en="LED light session as a complement to facial care.">
+                  Sesión de luz LED como complemento del cuidado facial.
+                </p>
+                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Terapia%20LED.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all js-card-wa" data-es="Consultar" data-en="Inquire">
+                  Consultar
+                </a>
               </div>
             </div>
             <div class="card-hover bg-white rounded-2xl md:rounded-[1.5rem] border border-[#FFD6E3]/60 shadow-sm flex flex-col h-full overflow-hidden" data-name-es="Crystal Carboxy" data-name-en="Crystal Carboxy">
@@ -563,13 +730,19 @@ transform: none !important;
               </div>
               <div class="p-3 md:p-4 lg:p-5 flex flex-col flex-1">
                 <div class="flex flex-col gap-0.5 mb-1.5">
-                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="Crystal Carboxy" data-en="Crystal Carboxy">Crystal Carboxy</h3>
+                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="Crystal Carboxy" data-en="Crystal Carboxy">
+                    Crystal Carboxy
+                  </h3>
                   <span class="font-display text-lg md:text-xl font-semibold text-[#F50087]">
                     $85
                   </span>
                 </div>
-                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3" data-es="Tratamiento facial con tecnología de carboxiterapia." data-en="Facial treatment using carboxytherapy technology.">Tratamiento facial con tecnología de carboxiterapia.</p>
-                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Crystal%20Carboxy.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all js-card-wa" data-es="Consultar" data-en="Inquire">Consultar</a>
+                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3" data-es="Tratamiento facial con tecnología de carboxiterapia." data-en="Facial treatment using carboxytherapy technology.">
+                  Tratamiento facial con tecnología de carboxiterapia.
+                </p>
+                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Crystal%20Carboxy.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all js-card-wa" data-es="Consultar" data-en="Inquire">
+                  Consultar
+                </a>
               </div>
             </div>
             <div class="card-hover bg-white rounded-2xl md:rounded-[1.5rem] border border-[#FFD6E3]/60 shadow-sm flex flex-col h-full overflow-hidden" data-name-es="Esperma de Salmón" data-name-en="Salmon-Derived Skin Treatment">
@@ -578,13 +751,19 @@ transform: none !important;
               </div>
               <div class="p-3 md:p-4 lg:p-5 flex flex-col flex-1">
                 <div class="flex flex-col gap-0.5 mb-1.5">
-                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="Esperma de Salmón" data-en="Salmon-Derived Skin Treatment">Esperma de Salmón</h3>
+                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="Esperma de Salmón" data-en="Salmon-Derived Skin Treatment">
+                    Esperma de Salmón
+                  </h3>
                   <span class="font-display text-lg md:text-xl font-semibold text-[#F50087]">
                     $85
                   </span>
                 </div>
-                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3" data-es="Tratamiento facial avanzado para el cuidado de la piel." data-en="Advanced facial treatment for skin care.">Tratamiento facial avanzado para el cuidado de la piel.</p>
-                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Esperma%20de%20Salm%C3%B3n.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all js-card-wa" data-es="Consultar" data-en="Inquire">Consultar</a>
+                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3" data-es="Tratamiento facial avanzado para el cuidado de la piel." data-en="Advanced facial treatment for skin care.">
+                  Tratamiento facial avanzado para el cuidado de la piel.
+                </p>
+                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Esperma%20de%20Salm%C3%B3n.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all js-card-wa" data-es="Consultar" data-en="Inquire">
+                  Consultar
+                </a>
               </div>
             </div>
           </div>
@@ -597,9 +776,13 @@ transform: none !important;
           <div class="mb-12 reveal">
             <span class="text-[11px] tracking-[0.25em] font-semibold text-[#F50087] flex items-center gap-2">
               <iconify-icon icon="solar:hand-heart-linear" width="16" class="text-[#F5CE68]"></iconify-icon>
-              <span data-es="BIENESTAR CORPORAL" data-en="BODY WELLNESS">BIENESTAR CORPORAL</span>
+              <span data-es="BIENESTAR CORPORAL" data-en="BODY WELLNESS">
+                BIENESTAR CORPORAL
+              </span>
             </span>
-            <h2 class="font-display section-title font-medium text-[#0D1530] mt-3" data-es="Tratamientos corporales" data-en="Body Treatments">Tratamientos corporales</h2>
+            <h2 class="font-display section-title font-medium text-[#0D1530] mt-3" data-es="Tratamientos corporales" data-en="Body Treatments">
+              Tratamientos corporales
+            </h2>
             <div class="gold-line w-40 mt-5"></div>
           </div>
           <div class="grid grid-cols-2 max-[359px]:grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-5">
@@ -609,24 +792,34 @@ transform: none !important;
               </div>
               <div class="p-3 md:p-4 lg:p-5 flex flex-col flex-1">
                 <div class="flex flex-col gap-0.5 mb-1.5">
-                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="Maderoterapia" data-en="Wood Therapy">Maderoterapia</h3>
+                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="Maderoterapia" data-en="Wood Therapy">
+                    Maderoterapia
+                  </h3>
                   <div class="flex flex-col gap-1 mt-1">
                     <div class="flex justify-between items-center text-[11px] md:text-xs bg-[#FFF8F2] px-2 py-1 rounded border border-[#FFD6E3]/50">
-                      <span class="text-[#25252D] font-medium" data-es="Cuerpo completo" data-en="Full body">Cuerpo completo</span>
+                      <span class="text-[#25252D] font-medium" data-es="Cuerpo completo" data-en="Full body">
+                        Cuerpo completo
+                      </span>
                       <span class="font-display text-sm font-semibold text-[#F50087]">
                         $80
                       </span>
                     </div>
                     <div class="flex justify-between items-center text-[11px] md:text-xs bg-[#FFF8F2] px-2 py-1 rounded border border-[#FFD6E3]/50">
-                      <span class="text-[#25252D] font-medium" data-es="Una zona" data-en="One area">Una zona</span>
+                      <span class="text-[#25252D] font-medium" data-es="Una zona" data-en="One area">
+                        Una zona
+                      </span>
                       <span class="font-display text-sm font-semibold text-[#F50087]">
                         $50
                       </span>
                     </div>
                   </div>
                 </div>
-                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3 mt-1" data-es="Masaje corporal con instrumentos de madera." data-en="Body massage using wooden instruments.">Masaje corporal con instrumentos de madera.</p>
-                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Maderoterapia.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all" data-es="Consultar" data-en="Inquire">Consultar</a>
+                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3 mt-1" data-es="Masaje corporal con instrumentos de madera." data-en="Body massage using wooden instruments.">
+                  Masaje corporal con instrumentos de madera.
+                </p>
+                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Maderoterapia.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all" data-es="Consultar" data-en="Inquire">
+                  Consultar
+                </a>
               </div>
             </div>
             <div class="card-hover bg-white rounded-2xl md:rounded-[1.5rem] border border-[#FFD6E3]/60 shadow-sm flex flex-col h-full overflow-hidden">
@@ -635,13 +828,19 @@ transform: none !important;
               </div>
               <div class="p-3 md:p-4 lg:p-5 flex flex-col flex-1">
                 <div class="flex flex-col gap-0.5 mb-1.5">
-                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="Drenaje Linfático" data-en="Lymphatic Drainage Massage">Drenaje Linfático</h3>
+                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="Drenaje Linfático" data-en="Lymphatic Drainage Massage">
+                    Drenaje Linfático
+                  </h3>
                   <span class="font-display text-lg md:text-xl font-semibold text-[#F50087]">
                     $75
                   </span>
                 </div>
-                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3" data-es="Masaje suave enfocado en el bienestar corporal." data-en="Gentle massage focused on body wellness.">Masaje suave enfocado en el bienestar corporal.</p>
-                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Drenaje%20Linf%C3%A1tico.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all" data-es="Consultar" data-en="Inquire">Consultar</a>
+                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3" data-es="Masaje suave enfocado en el bienestar corporal." data-en="Gentle massage focused on body wellness.">
+                  Masaje suave enfocado en el bienestar corporal.
+                </p>
+                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Drenaje%20Linf%C3%A1tico.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all" data-es="Consultar" data-en="Inquire">
+                  Consultar
+                </a>
               </div>
             </div>
             <div class="card-hover bg-white rounded-2xl md:rounded-[1.5rem] border border-[#FFD6E3]/60 shadow-sm flex flex-col h-full overflow-hidden">
@@ -650,13 +849,19 @@ transform: none !important;
               </div>
               <div class="p-3 md:p-4 lg:p-5 flex flex-col flex-1">
                 <div class="flex flex-col gap-0.5 mb-1.5">
-                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="Presoterapia" data-en="Pressotherapy">Presoterapia</h3>
+                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="Presoterapia" data-en="Pressotherapy">
+                    Presoterapia
+                  </h3>
                   <span class="font-display text-lg md:text-xl font-semibold text-[#F50087]">
                     $50
                   </span>
                 </div>
-                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3" data-es="Sesión de compresión para una sensación de ligereza." data-en="Compression session for a feeling of lightness.">Sesión de compresión para una sensación de ligereza.</p>
-                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Presoterapia.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all" data-es="Consultar" data-en="Inquire">Consultar</a>
+                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3" data-es="Sesión de compresión para una sensación de ligereza." data-en="Compression session for a feeling of lightness.">
+                  Sesión de compresión para una sensación de ligereza.
+                </p>
+                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Presoterapia.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all" data-es="Consultar" data-en="Inquire">
+                  Consultar
+                </a>
               </div>
             </div>
             <div class="card-hover bg-white rounded-2xl md:rounded-[1.5rem] border border-[#FFD6E3]/60 shadow-sm flex flex-col h-full overflow-hidden">
@@ -665,13 +870,19 @@ transform: none !important;
               </div>
               <div class="p-3 md:p-4 lg:p-5 flex flex-col flex-1">
                 <div class="flex flex-col gap-0.5 mb-1.5">
-                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="EMSCULPT" data-en="EMSCULPT">EMSCULPT</h3>
+                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="EMSCULPT" data-en="EMSCULPT">
+                    EMSCULPT
+                  </h3>
                   <span class="font-display text-lg md:text-xl font-semibold text-[#F50087]">
                     $50
                   </span>
                 </div>
-                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3" data-es="Sesión corporal con tecnología de estimulación muscular." data-en="Body session using muscle-stimulation technology.">Sesión corporal con tecnología de estimulación muscular.</p>
-                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20EMSCULPT.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all" data-es="Consultar" data-en="Inquire">Consultar</a>
+                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3" data-es="Sesión corporal con tecnología de estimulación muscular." data-en="Body session using muscle-stimulation technology.">
+                  Sesión corporal con tecnología de estimulación muscular.
+                </p>
+                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20EMSCULPT.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all" data-es="Consultar" data-en="Inquire">
+                  Consultar
+                </a>
               </div>
             </div>
             <div class="card-hover bg-white rounded-2xl md:rounded-[1.5rem] border border-[#FFD6E3]/60 shadow-sm flex flex-col h-full overflow-hidden">
@@ -680,13 +891,19 @@ transform: none !important;
               </div>
               <div class="p-3 md:p-4 lg:p-5 flex flex-col flex-1">
                 <div class="flex flex-col gap-0.5 mb-1.5">
-                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="Manta Térmica" data-en="Thermal Blanket Session">Manta Térmica</h3>
+                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="Manta Térmica" data-en="Thermal Blanket Session">
+                    Manta Térmica
+                  </h3>
                   <span class="font-display text-lg md:text-xl font-semibold text-[#F50087]">
                     $50
                   </span>
                 </div>
-                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3" data-es="Sesión de calor como parte del cuidado corporal." data-en="Heat session as part of body care.">Sesión de calor como parte del cuidado corporal.</p>
-                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Manta%20T%C3%A9rmica.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all" data-es="Consultar" data-en="Inquire">Consultar</a>
+                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3" data-es="Sesión de calor como parte del cuidado corporal." data-en="Heat session as part of body care.">
+                  Sesión de calor como parte del cuidado corporal.
+                </p>
+                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Manta%20T%C3%A9rmica.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all" data-es="Consultar" data-en="Inquire">
+                  Consultar
+                </a>
               </div>
             </div>
             <div class="card-hover bg-white rounded-2xl md:rounded-[1.5rem] border border-[#FFD6E3]/60 shadow-sm flex flex-col h-full overflow-hidden">
@@ -695,13 +912,19 @@ transform: none !important;
               </div>
               <div class="p-3 md:p-4 lg:p-5 flex flex-col flex-1">
                 <div class="flex flex-col gap-0.5 mb-1.5">
-                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="Detox Iónico" data-en="Ionic Foot Session">Detox Iónico</h3>
+                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="Detox Iónico" data-en="Ionic Foot Session">
+                    Detox Iónico
+                  </h3>
                   <span class="font-display text-lg md:text-xl font-semibold text-[#F50087]">
                     $30
                   </span>
                 </div>
-                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3" data-es="Sesión relajante de pies como complemento de bienestar." data-en="Relaxing foot session as a wellness complement.">Sesión relajante de pies como complemento de bienestar.</p>
-                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Detox%20I%C3%B3nico.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all" data-es="Consultar" data-en="Inquire">Consultar</a>
+                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3" data-es="Sesión relajante de pies como complemento de bienestar." data-en="Relaxing foot session as a wellness complement.">
+                  Sesión relajante de pies como complemento de bienestar.
+                </p>
+                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Detox%20I%C3%B3nico.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all" data-es="Consultar" data-en="Inquire">
+                  Consultar
+                </a>
               </div>
             </div>
             <div class="card-hover bg-white rounded-2xl md:rounded-[1.5rem] border border-[#FFD6E3]/60 shadow-sm flex flex-col h-full overflow-hidden">
@@ -710,24 +933,34 @@ transform: none !important;
               </div>
               <div class="p-3 md:p-4 lg:p-5 flex flex-col flex-1">
                 <div class="flex flex-col gap-0.5 mb-1.5">
-                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="Reducción de Medidas" data-en="Body Contouring Treatment">Reducción de Medidas</h3>
+                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="Reducción de Medidas" data-en="Body Contouring Treatment">
+                    Reducción de Medidas
+                  </h3>
                   <div class="flex flex-col gap-1 mt-1">
                     <div class="flex justify-between items-center text-[11px] md:text-xs bg-[#FFF8F2] px-2 py-1 rounded border border-[#FFD6E3]/50">
-                      <span class="text-[#25252D] font-medium" data-es="Cuerpo completo" data-en="Full body">Cuerpo completo</span>
+                      <span class="text-[#25252D] font-medium" data-es="Cuerpo completo" data-en="Full body">
+                        Cuerpo completo
+                      </span>
                       <span class="font-display text-sm font-semibold text-[#F50087]">
                         $80
                       </span>
                     </div>
                     <div class="flex justify-between items-center text-[11px] md:text-xs bg-[#FFF8F2] px-2 py-1 rounded border border-[#FFD6E3]/50">
-                      <span class="text-[#25252D] font-medium" data-es="Una zona" data-en="One area">Una zona</span>
+                      <span class="text-[#25252D] font-medium" data-es="Una zona" data-en="One area">
+                        Una zona
+                      </span>
                       <span class="font-display text-sm font-semibold text-[#F50087]">
                         $50
                       </span>
                     </div>
                   </div>
                 </div>
-                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3 mt-1" data-es="Tratamiento corporal enfocado en moldear la figura." data-en="Body treatment focused on shaping the figure.">Tratamiento corporal enfocado en moldear la figura.</p>
-                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Reducci%C3%B3n%20de%20Medidas.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all" data-es="Consultar" data-en="Inquire">Consultar</a>
+                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3 mt-1" data-es="Tratamiento corporal enfocado en moldear la figura." data-en="Body treatment focused on shaping the figure.">
+                  Tratamiento corporal enfocado en moldear la figura.
+                </p>
+                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Reducci%C3%B3n%20de%20Medidas.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all" data-es="Consultar" data-en="Inquire">
+                  Consultar
+                </a>
               </div>
             </div>
             <div class="card-hover bg-white rounded-2xl md:rounded-[1.5rem] border border-[#FFD6E3]/60 shadow-sm flex flex-col h-full overflow-hidden">
@@ -736,24 +969,34 @@ transform: none !important;
               </div>
               <div class="p-3 md:p-4 lg:p-5 flex flex-col flex-1">
                 <div class="flex flex-col gap-0.5 mb-1.5">
-                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="Reafirmación Corporal" data-en="Body Firming Treatment">Reafirmación Corporal</h3>
+                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="Reafirmación Corporal" data-en="Body Firming Treatment">
+                    Reafirmación Corporal
+                  </h3>
                   <div class="flex flex-col gap-1 mt-1">
                     <div class="flex justify-between items-center text-[11px] md:text-xs bg-[#FFF8F2] px-2 py-1 rounded border border-[#FFD6E3]/50">
-                      <span class="text-[#25252D] font-medium" data-es="Cuerpo completo" data-en="Full body">Cuerpo completo</span>
+                      <span class="text-[#25252D] font-medium" data-es="Cuerpo completo" data-en="Full body">
+                        Cuerpo completo
+                      </span>
                       <span class="font-display text-sm font-semibold text-[#F50087]">
                         $80
                       </span>
                     </div>
                     <div class="flex justify-between items-center text-[11px] md:text-xs bg-[#FFF8F2] px-2 py-1 rounded border border-[#FFD6E3]/50">
-                      <span class="text-[#25252D] font-medium" data-es="Una zona" data-en="One area">Una zona</span>
+                      <span class="text-[#25252D] font-medium" data-es="Una zona" data-en="One area">
+                        Una zona
+                      </span>
                       <span class="font-display text-sm font-semibold text-[#F50087]">
                         $50
                       </span>
                     </div>
                   </div>
                 </div>
-                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3 mt-1" data-es="Tratamiento que ayuda a mejorar la apariencia de firmeza." data-en="A treatment that helps improve the appearance of firmness.">Tratamiento que ayuda a mejorar la apariencia de firmeza.</p>
-                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Reafirmaci%C3%B3n%20Corporal.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all" data-es="Consultar" data-en="Inquire">Consultar</a>
+                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3 mt-1" data-es="Tratamiento que ayuda a mejorar la apariencia de firmeza." data-en="A treatment that helps improve the appearance of firmness.">
+                  Tratamiento que ayuda a mejorar la apariencia de firmeza.
+                </p>
+                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Reafirmaci%C3%B3n%20Corporal.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all" data-es="Consultar" data-en="Inquire">
+                  Consultar
+                </a>
               </div>
             </div>
             <div class="card-hover bg-white rounded-2xl md:rounded-[1.5rem] border border-[#FFD6E3]/60 shadow-sm flex flex-col h-full overflow-hidden">
@@ -762,13 +1005,19 @@ transform: none !important;
               </div>
               <div class="p-3 md:p-4 lg:p-5 flex flex-col flex-1">
                 <div class="flex flex-col gap-0.5 mb-1.5">
-                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="Exfoliación Corporal" data-en="Body Exfoliation">Exfoliación Corporal</h3>
+                  <h3 class="font-display text-[15px] md:text-lg font-semibold text-[#0D1530] leading-tight" data-es="Exfoliación Corporal" data-en="Body Exfoliation">
+                    Exfoliación Corporal
+                  </h3>
                   <span class="font-display text-lg md:text-xl font-semibold text-[#F50087]">
                     $75
                   </span>
                 </div>
-                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3" data-es="Exfoliación que deja la piel suave y renovada." data-en="Exfoliation that leaves the skin smooth and renewed.">Exfoliación que deja la piel suave y renovada.</p>
-                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Exfoliaci%C3%B3n%20Corporal.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all" data-es="Consultar" data-en="Inquire">Consultar</a>
+                <p class="text-[11px] md:text-[13px] text-[#25252D]/70 font-light leading-snug flex-1 mb-3 line-clamp-2 md:line-clamp-3" data-es="Exfoliación que deja la piel suave y renovada." data-en="Exfoliation that leaves the skin smooth and renewed.">
+                  Exfoliación que deja la piel suave y renovada.
+                </p>
+                <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Exfoliaci%C3%B3n%20Corporal.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="mt-auto flex items-center justify-center gap-1.5 text-[11px] md:text-xs font-medium text-[#0D1530] bg-[#FFF8F2] border border-[#FFD6E3]/50 rounded-full py-2 px-2 hover:bg-[#F50087] hover:text-white hover:border-[#F50087] transition-all" data-es="Consultar" data-en="Inquire">
+                  Consultar
+                </a>
               </div>
             </div>
           </div>
@@ -781,18 +1030,26 @@ transform: none !important;
           <div class="mb-10 reveal">
             <span class="text-[11px] tracking-[0.25em] font-semibold text-[#F50087] flex items-center gap-2">
               <iconify-icon icon="solar:bolt-linear" width="16" class="text-[#F5CE68]"></iconify-icon>
-              <span data-es="DEPILACIÓN LÁSER" data-en="LASER HAIR REMOVAL">DEPILACIÓN LÁSER</span>
+              <span data-es="DEPILACIÓN LÁSER" data-en="LASER HAIR REMOVAL">
+                DEPILACIÓN LÁSER
+              </span>
             </span>
-            <h2 class="font-display section-title font-medium text-[#0D1530] mt-3" data-es="Láser diodo" data-en="Diode Laser">Láser diodo</h2>
+            <h2 class="font-display section-title font-medium text-[#0D1530] mt-3" data-es="Láser diodo" data-en="Diode Laser">
+              Láser diodo
+            </h2>
             <div class="gold-line w-40 mt-5"></div>
             <div class="flex flex-wrap gap-3 mt-6">
               <span class="inline-flex items-center gap-2 liquid-glass rounded-full px-4 py-2 text-xs font-medium text-[#0D1530]">
                 <iconify-icon icon="solar:layers-linear" width="16" class="text-[#F50087]"></iconify-icon>
-                <span data-es="Paquetes de 8 sesiones" data-en="8-session packages">Paquetes de 8 sesiones</span>
+                <span data-es="Paquetes de 8 sesiones" data-en="8-session packages">
+                  Paquetes de 8 sesiones
+                </span>
               </span>
               <span class="inline-flex items-center gap-2 liquid-glass rounded-full px-4 py-2 text-xs font-medium text-[#0D1530]">
                 <iconify-icon icon="solar:wallet-money-linear" width="16" class="text-[#F50087]"></iconify-icon>
-                <span data-es="Depósito requerido: $50" data-en="Required deposit: $50" class="">Depósito requerido: $50</span>
+                <span data-es="Depósito requerido: $50" data-en="Required deposit: $50" class="">
+                  Depósito requerido: $50
+                </span>
               </span>
             </div>
           </div>
@@ -1058,7 +1315,9 @@ transform: none !important;
           <div class="mt-10 text-center reveal">
             <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20L%C3%A1ser%20diodo.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="btn-primary js-wa-laser">
               <iconify-icon icon="solar:chat-round-dots-linear" width="18"></iconify-icon>
-              <span data-es="Consultar disponibilidad de láser" data-en="Check laser availability">Consultar disponibilidad de láser</span>
+              <span data-es="Consultar disponibilidad de láser" data-en="Check laser availability">
+                Consultar disponibilidad de láser
+              </span>
             </a>
           </div>
         </div>
@@ -1070,9 +1329,13 @@ transform: none !important;
           <div class="mb-12 reveal">
             <span class="text-[11px] tracking-[0.25em] font-semibold text-[#F50087] flex items-center gap-2">
               <iconify-icon icon="solar:leaf-linear" width="16" class="text-[#F5CE68]"></iconify-icon>
-              <span data-es="DEPILACIÓN PROFESIONAL" data-en="PROFESSIONAL WAXING">DEPILACIÓN PROFESIONAL</span>
+              <span data-es="DEPILACIÓN PROFESIONAL" data-en="PROFESSIONAL WAXING">
+                DEPILACIÓN PROFESIONAL
+              </span>
             </span>
-            <h2 class="font-display section-title font-medium text-[#0D1530] mt-3" data-es="Depilación con cera" data-en="Waxing">Depilación con cera</h2>
+            <h2 class="font-display section-title font-medium text-[#0D1530] mt-3" data-es="Depilación con cera" data-en="Waxing">
+              Depilación con cera
+            </h2>
             <div class="gold-line w-40 mt-5"></div>
           </div>
           <div class="mb-8 rounded-[1.5rem] border border-[#FFD6E3]/60 overflow-hidden h-48 md:h-64 reveal shadow-sm">
@@ -1248,7 +1511,9 @@ transform: none !important;
           <div class="mt-10 text-center reveal">
             <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20el%20servicio%20de%20Depilaci%C3%B3n%20con%20cera.%20%C2%BFPodr%C3%ADan%20darme%20informaci%C3%B3n%20y%20disponibilidad%20para%20una%20cita%3F" target="_blank" rel="noopener" class="btn-ghost js-wa-wax">
               <iconify-icon icon="solar:chat-round-dots-linear" width="18"></iconify-icon>
-              <span data-es="Consultar depilación con cera" data-en="Ask about waxing" class="">Consultar depilación con cera</span>
+              <span data-es="Consultar depilación con cera" data-en="Ask about waxing" class="">
+                Consultar depilación con cera
+              </span>
             </a>
           </div>
         </div>
@@ -1260,15 +1525,24 @@ transform: none !important;
           <div class="absolute -top-10 -left-10 w-60 h-60 bg-[#F50087]/15 rounded-full blur-3xl pointer-events-none"></div>
           <div class="absolute -bottom-10 -right-10 w-60 h-60 bg-[#F5CE68]/10 rounded-full blur-3xl pointer-events-none"></div>
           <div class="relative reveal">
-            <h2 class="font-display section-title font-medium text-white mb-5" data-es="¿Lista para coordinar tu cita?" data-en="Ready to schedule your appointment?">¿Lista para coordinar tu cita?</h2>
-            <p class="text-white/70 font-light max-w-xl mx-auto mb-9" data-es="Comunícate con Princess Esthetics por WhatsApp para recibir orientación personalizada y confirmar tu espacio." data-en="Contact Princess Esthetics on WhatsApp for personalized guidance and to confirm your appointment.">Comunícate con Princess Esthetics por WhatsApp para recibir orientación personalizada y confirmar tu espacio.</p>
+            <h2 class="font-display section-title font-medium text-white mb-5" data-es="¿Lista para coordinar tu cita?" data-en="Ready to schedule your appointment?">
+              ¿Lista para coordinar tu cita?
+            </h2>
+            <p class="text-white/70 font-light max-w-xl mx-auto mb-9" data-es="Comunícate con Princess Esthetics por WhatsApp para recibir orientación personalizada y confirmar tu espacio." data-en="Contact Princess Esthetics on WhatsApp for personalized guidance and to confirm your appointment.">
+              Comunícate con Princess Esthetics por WhatsApp para recibir
+              orientación personalizada y confirmar tu espacio.
+            </p>
             <div class="flex flex-wrap gap-3 justify-center">
               <a href="https://wa.me/17876748261?text=Hola%2C%20me%20interesa%20recibir%20informaci%C3%B3n%20sobre%20sus%20servicios%20y%20disponibilidad%20para%20una%20cita." target="_blank" rel="noopener" class="btn-primary js-wa">
                 <iconify-icon icon="solar:chat-round-dots-linear" width="18"></iconify-icon>
-                <span data-es="Consultar por WhatsApp" data-en="Ask on WhatsApp">Consultar por WhatsApp</span>
+                <span data-es="Consultar por WhatsApp" data-en="Ask on WhatsApp">
+                  Consultar por WhatsApp
+                </span>
               </a>
               <a href="galeria.html" class="btn-ghost" style="background:rgba(255,255,255,0.1);color:#fff;border-color:rgba(255,255,255,0.2)">
-                <span data-es="Ver galería" data-en="View gallery">Ver galería</span>
+                <span data-es="Ver galería" data-en="View gallery">
+                  Ver galería
+                </span>
                 <iconify-icon icon="solar:arrow-right-linear" width="18"></iconify-icon>
               </a>
             </div>
@@ -1284,7 +1558,10 @@ transform: none !important;
           <a href="index.html" class="inline-block mb-2">
             <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/096923e3-18d0-458b-b81b-5b1471885ec7_800w.png" alt="Princess Esthetics" class="md:h-40 w-auto h-32 object-contain mb-5 -translate-y-2 scale-100" style="object-fit:contain" width="160" height="48">
           </a>
-          <p class="text-white/70 text-sm font-light leading-relaxed mb-6" data-es="Cuidado estético profesional con tecnología de vanguardia en Canóvanas." data-en="Professional aesthetic care with cutting-edge technology in Canóvanas.">Cuidado estético profesional con tecnología de vanguardia en Canóvanas.</p>
+          <p class="text-white/70 text-sm font-light leading-relaxed mb-6" data-es="Cuidado estético profesional con tecnología de vanguardia en Canóvanas." data-en="Professional aesthetic care with cutting-edge technology in Canóvanas.">
+            Cuidado estético profesional con tecnología de vanguardia en
+            Canóvanas.
+          </p>
           <div class="flex items-center gap-4">
             <a href="https://www.instagram.com/princessesthetics_pr/" target="_blank" rel="noopener" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white hover:bg-[#F50087] transition-colors" aria-label="Instagram">
               <iconify-icon icon="mdi:instagram" width="20" class=""></iconify-icon>
@@ -1295,18 +1572,34 @@ transform: none !important;
           </div>
         </div>
         <div class="flex flex-col items-center md:items-start text-center md:text-left">
-          <h3 class="font-display text-xl font-semibold text-white mb-5" data-es="Navegación" data-en="Navigation">Navegación</h3>
+          <h3 class="font-display text-xl font-semibold text-white mb-5" data-es="Navegación" data-en="Navigation">
+            Navegación
+          </h3>
           <div class="flex flex-col gap-3 text-white/70 text-sm font-light">
-            <a href="index.html" class="hover:text-[#F50087] transition-colors" data-es="Inicio" data-en="Home">Inicio</a>
-            <a href="index.html#nosotros" class="hover:text-[#F50087] transition-colors" data-es="Nosotros" data-en="About">Nosotros</a>
-            <a href="/servicio" class="hover:text-[#F50087] transition-colors" data-es="Servicios" data-en="Services">Servicios</a>
-            <a href="galeria.html" class="hover:text-[#F50087] transition-colors" data-es="Galería" data-en="Gallery">Galería</a>
-            <a href="index.html#testimonios" class="hover:text-[#F50087] transition-colors" data-es="Testimonios" data-en="Testimonials">Testimonios</a>
-            <a href="index.html#ubicacion" class="hover:text-[#F50087] transition-colors" data-es="Ubicación" data-en="Location">Ubicación</a>
+            <a href="index.html" class="hover:text-[#F50087] transition-colors" data-es="Inicio" data-en="Home">
+              Inicio
+            </a>
+            <a href="index.html#nosotros" class="hover:text-[#F50087] transition-colors" data-es="Nosotros" data-en="About">
+              Nosotros
+            </a>
+            <a href="servicios.html" class="hover:text-[#F50087] transition-colors" data-es="Servicios" data-en="Services">
+              Servicios
+            </a>
+            <a href="galeria.html" class="hover:text-[#F50087] transition-colors" data-es="Galería" data-en="Gallery">
+              Galería
+            </a>
+            <a href="index.html#testimonios" class="hover:text-[#F50087] transition-colors" data-es="Testimonios" data-en="Testimonials">
+              Testimonios
+            </a>
+            <a href="index.html#ubicacion" class="hover:text-[#F50087] transition-colors" data-es="Ubicación" data-en="Location">
+              Ubicación
+            </a>
           </div>
         </div>
         <div class="flex flex-col items-center md:items-start text-center md:text-left">
-          <h3 class="font-display text-xl font-semibold text-white mb-5" data-es="Contacto" data-en="Contact">Contacto</h3>
+          <h3 class="font-display text-xl font-semibold text-white mb-5" data-es="Contacto" data-en="Contact">
+            Contacto
+          </h3>
           <div class="flex flex-col gap-4 text-white/70 text-sm font-light items-center md:items-start">
             <a href="https://wa.me/17876748261" target="_blank" rel="noopener" class="flex items-center md:items-start gap-3 hover:text-[#F50087] transition-colors">
               <iconify-icon icon="solar:phone-linear" width="18" class="text-[#F50087] shrink-0 md:mt-0.5"></iconify-icon>
@@ -1314,23 +1607,34 @@ transform: none !important;
             </a>
             <a href="mailto:princessestetics@yahoo.com" class="flex items-center md:items-start gap-3 hover:text-[#F50087] transition-colors">
               <iconify-icon icon="solar:letter-linear" width="18" class="text-[#F50087] shrink-0 md:mt-0.5"></iconify-icon>
-              <span class="cursor-pointer" onclick="window.location.href='https://www.google.com/maps/place/Princess+Esthetics/@18.3771885,-65.9041439,17z/data=!3m1!4b1!4m6!3m5!1s0x8c036128621884cb:0x1801ff99fe5c029d!8m2!3d18.3771834!4d-65.901569!16s%2Fg%2F11p6f9cdhx?entry=ttu&amp;g_ep=EgoyMDI2MDcwNi4wIKXMDSoASAFQAw%3D%3D'" role="button">princessestetics@yahoo.com</span>
+              <span class="cursor-pointer" onclick="window.location.href='https://www.google.com/maps/place/Princess+Esthetics/@18.3771885,-65.9041439,17z/data=!3m1!4b1!4m6!3m5!1s0x8c036128621884cb:0x1801ff99fe5c029d!8m2!3d18.3771834!4d-65.901569!16s%2Fg%2F11p6f9cdhx?entry=ttu&amp;g_ep=EgoyMDI2MDcwNi4wIKXMDSoASAFQAw%3D%3D'" role="button">
+                princessestetics@yahoo.com
+              </span>
             </a>
             <a href="index.html#ubicacion" class="flex items-start gap-3 hover:text-[#F50087] transition-colors text-center md:text-left">
               <iconify-icon icon="solar:map-point-linear" width="18" class="text-[#F50087] shrink-0 mt-0.5 hidden md:block"></iconify-icon>
-              <span data-es="Edificio Multiusos, segundo piso, oficina PB, 02 Cll Pepita Albandoz, Canóvanas, PR 00729" data-en="Multipurpose Building, second floor, PB office, 02 Pepita Albandoz St, Canóvanas, PR 00729" class="cursor-pointer" onclick="window.location.href='https://www.google.com/maps/place/Princess+Esthetics/@18.3771885,-65.9041439,17z/data=!3m1!4b1!4m6!3m5!1s0x8c036128621884cb:0x1801ff99fe5c029d!8m2!3d18.3771834!4d-65.901569!16s%2Fg%2F11p6f9cdhx?entry=ttu&amp;g_ep=EgoyMDI2MDcwNi4wIKXMDSoASAFQAw%3D%3D'" role="button">Edificio Multiusos, segundo piso, oficina PB, 02 Cll Pepita Albandoz, Canóvanas, PR 00729</span>
+              <span data-es="Edificio Multiusos, segundo piso, oficina PB, 02 Cll Pepita Albandoz, Canóvanas, PR 00729" data-en="Multipurpose Building, second floor, PB office, 02 Pepita Albandoz St, Canóvanas, PR 00729" class="cursor-pointer" onclick="window.location.href='https://www.google.com/maps/place/Princess+Esthetics/@18.3771885,-65.9041439,17z/data=!3m1!4b1!4m6!3m5!1s0x8c036128621884cb:0x1801ff99fe5c029d!8m2!3d18.3771834!4d-65.901569!16s%2Fg%2F11p6f9cdhx?entry=ttu&amp;g_ep=EgoyMDI2MDcwNi4wIKXMDSoASAFQAw%3D%3D'" role="button">
+                Edificio Multiusos, segundo piso, oficina PB, 02 Cll Pepita
+                Albandoz, Canóvanas, PR 00729
+              </span>
             </a>
           </div>
         </div>
         <div class="flex flex-col items-center md:items-start text-center md:text-left w-full max-w-[250px] mx-auto md:mx-0">
-          <h3 class="font-display text-xl font-semibold text-white mb-5" data-es="Horario" data-en="Hours">Horario</h3>
+          <h3 class="font-display text-xl font-semibold text-white mb-5" data-es="Horario" data-en="Hours">
+            Horario
+          </h3>
           <div class="flex flex-col gap-3 text-white/70 text-sm font-light w-full">
             <div class="flex justify-between border-b border-white/10 pb-2">
-              <span data-es="Martes - Sábado" data-en="Tuesday - Saturday">Martes - Sábado</span>
+              <span data-es="Martes - Sábado" data-en="Tuesday - Saturday">
+                Martes - Sábado
+              </span>
               <span>9:00 AM - 5:00 PM</span>
             </div>
             <div class="flex justify-between border-b border-white/10 pb-2">
-              <span data-es="Domingo &amp; Lunes" data-en="Sunday &amp; Monday">Domingo &amp; Lunes</span>
+              <span data-es="Domingo &amp; Lunes" data-en="Sunday &amp; Monday">
+                Domingo &amp; Lunes
+              </span>
               <span data-es="Cerrado" data-en="Closed">Cerrado</span>
             </div>
           </div>
@@ -1349,7 +1653,9 @@ transform: none !important;
         <div class="flex flex-col items-center md:items-end gap-1">
           <span>
             © 2024 Princess Esthetics.
-            <span data-es="Todos los derechos reservados." data-en="All rights reserved.">Todos los derechos reservados.</span>
+            <span data-es="Todos los derechos reservados." data-en="All rights reserved.">
+              Todos los derechos reservados.
+            </span>
           </span>
           <span>
             Website by
@@ -1534,44 +1840,44 @@ transform: none !important;
     <script>
       (function () {
         var TRANSITION_TIME = 420;
-    
+
         function isModifiedClick(event) {
           return event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0;
         }
-    
+
         function closeMobileMenuIfOpen() {
           var menu = document.getElementById('mobile-menu');
           var toggle = document.getElementById('menu-toggle');
           var icon = document.getElementById('menu-icon');
-    
+
           if (menu && menu.classList.contains('open')) {
             menu.classList.remove('open');
           }
-    
+
           if (toggle) {
             toggle.setAttribute('aria-expanded', 'false');
           }
-    
+
           if (icon && icon.setAttribute) {
             icon.setAttribute('icon', 'solar:hamburger-menu-linear');
           }
-    
+
           document.body.style.overflow = '';
         }
-    
+
         window.addEventListener('DOMContentLoaded', function () {
           requestAnimationFrame(function () {
             document.body.classList.add('page-ready');
           });
         });
-    
+
         document.addEventListener('click', function (event) {
           var link = event.target.closest('a[href]');
           if (!link || isModifiedClick(event)) return;
-    
+
           var href = link.getAttribute('href');
           if (!href) return;
-    
+
           if (
             href.startsWith('#') ||
             href.startsWith('tel:') ||
@@ -1583,32 +1889,32 @@ transform: none !important;
           ) {
             return;
           }
-    
+
           if (link.target && link.target !== '_self') return;
-    
+
           var url = new URL(link.href, window.location.href);
           if (url.origin !== window.location.origin) return;
-    
+
           var isSamePageHash =
             url.pathname === window.location.pathname &&
             url.hash &&
             url.hash !== window.location.hash;
-    
+
           if (isSamePageHash) return;
-    
+
           event.preventDefault();
           event.stopImmediatePropagation();
-    
+
           closeMobileMenuIfOpen();
-    
+
           document.body.classList.remove('page-ready');
           document.body.classList.add('page-exit');
-    
+
           setTimeout(function () {
             window.location.href = url.href;
           }, TRANSITION_TIME);
         }, true);
-    
+
         window.addEventListener('pageshow', function () {
           document.body.classList.remove('page-exit');
           document.body.classList.add('page-ready');
